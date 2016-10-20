@@ -23,10 +23,10 @@ class Signin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: null,
-            password: null,
+            username: '',
+            password: '',
             submit: 'Sign In',
-            visible: true
+            visible: false
         };
         // Change status bar color to white
         StatusBar.setBarStyle('light-content');
@@ -37,7 +37,7 @@ class Signin extends Component {
     }
   
     _executeQuery() {
-      fetch('http://'+window.SERVER_IP+':'+window.SERVER_PORT+'/auth/signin', {
+      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/auth/signin', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
@@ -54,7 +54,7 @@ class Signin extends Component {
               AsyncStorage.setItem('user_id',  JSON.stringify(resJson.user.id));
               AsyncStorage.setItem('user_token',  JSON.stringify(resJson.token));
               window.CURRENT_USER = resJson.user;
-              this.props.navigator.replace(routes.reRoutePeople())
+              this.props.navigator.replace(routes.reRoutePeople());
             } catch (error) {
                console.log('Async Storage Set : ' + error);
             } 

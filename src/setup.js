@@ -49,7 +49,7 @@ class Setup extends Component {
             if(window.STORAGE_TOKEN !== null && window.STORAGE_USER_ID !== null) {
               this.setState({loading: false, connected: true});
             }else{
-                this.setState({loading: false, connected: false});
+              this.setState({loading: false, connected: false});
             }
           }
         )
