@@ -1,18 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
-import {
-    AsyncStorage,
-    AppRegistry,
-    View,
-    StyleSheet,
-    TextInput,
-    TouchableHighlight,
-    Text,
-    StatusBar,
-    ListView
-} from 'react-native'
+import { Container, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 
 import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
@@ -26,16 +15,13 @@ class People extends Component {
             token: null,
         };
         // Change status bar color to white
-        console.log("current_id : " + JSON.parse(window.CURRENT_USER))
-        StatusBar.setBarStyle('light-content');
+        console.log("current_id : " + JSON.parse(window.CURRENT_USER))  
     }
 
     render() {
         return ( 
           <Container> 
             <Content>
-                <Text>
-                </Text>
             </Content>
             
             <Footer theme={myTheme}>

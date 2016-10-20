@@ -1,5 +1,8 @@
 'use strict';
 
+import { Icon, Button } from 'native-base';
+import { Navigator, Text } from 'react-native';
+
 import React from 'react';
 import People from './people';
 import Camera from './camera';
@@ -11,16 +14,7 @@ import Setup from './setup';
 import Logout from './logout'
 
 import ExNavigator from '@exponent/react-native-navigator';
-import { Icon, Button } from 'native-base';
 
-import {
-    View,
-    Text,
-    Navigator,
-    Alert,
-    DeviceEventEmitter,
-    AsyncStorage
-} from 'react-native';
 
 const routes = {
     reRoutePeople() {
@@ -39,7 +33,7 @@ const routes = {
             );
         },
         configureScene() {
-            return Navigator.SceneConfigs.FloatFromLeft
+            return Navigator.SceneConfigs.PushFromRight
         },
       };
     },
@@ -53,7 +47,7 @@ const routes = {
                 return <People navigator={navigator}/>;
             },
             configureScene() {
-                return Navigator.SceneConfigs.FloatFromLeft
+                return Navigator.SceneConfigs.PushFromRight
             },
             renderRightButton(navigator) {
                 return (
@@ -74,7 +68,7 @@ const routes = {
                 return <Camera navigator={navigator}/>;
             },
             configureScene() {
-                return Navigator.SceneConfigs.FloatFromLeft
+                return Navigator.SceneConfigs.PushFromRight
             },
             renderRightButton(navigator) {
                 return (
@@ -95,7 +89,7 @@ const routes = {
                 return <Settings navigator={navigator}/>;
             },
             configureScene() {
-                return Navigator.SceneConfigs.FloatFromLeft
+                return Navigator.SceneConfigs.PushFromRight
             },
             renderRightButton(navigator) {
                 return (
@@ -116,7 +110,7 @@ const routes = {
                 return <Signin navigator={navigator}/>;
             },
             configureScene() {
-                return Navigator.SceneConfigs.FloatFromLeft
+                return Navigator.SceneConfigs.PushFromRight
             },
         };
     },
@@ -130,7 +124,7 @@ const routes = {
               return <Register navigator={navigator}/>;
           },
           configureScene() {
-              return Navigator.SceneConfigs.FloatFromLeft
+              return Navigator.SceneConfigs.PushFromRight
           },
       };
     },
@@ -144,7 +138,7 @@ const routes = {
               return <ForgotPass navigator={navigator}/>;
           },
           configureScene() {
-              return Navigator.SceneConfigs.FloatFromLeft
+              return Navigator.SceneConfigs.PushFromRight
           },
       };
     },

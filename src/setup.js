@@ -1,11 +1,12 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { View, AsyncStorage } from 'react-native';
+
 import ExNavigator from '@exponent/react-native-navigator';
 import Spinner from 'react-native-loading-spinner-overlay';
-import routes from './routes';
-import { View, AsyncStorage } from 'react-native';
 import Orientation from 'react-native-orientation';
+import routes from './routes';
 
 window.STORAGE_TOKEN = null;
 window.STORAGE_USER_ID = null;

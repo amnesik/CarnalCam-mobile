@@ -3,6 +3,7 @@
 import React from 'react';
 import ExNavigator from '@exponent/react-native-navigator';
 import { Alert, AsyncStorage } from 'react-native';
+
 import Routes from './routes';
 
 const logout = {

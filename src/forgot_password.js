@@ -1,52 +1,61 @@
 'use strict';
 
 import React, { Component, } from 'react';
-import { Container, Header, InputGroup, Content, Col, Row, Input, Grid, Button, Icon } from 'native-base';
-import myTheme from './themes/theme-auth';
+import { Container, InputGroup, Content, Col, Row, Input, Grid, Button, Icon } from 'native-base';
+import { StatusBar } from 'react-native';
+
 import routes from './routes';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StatusBar } from 'react-native';
+import myTheme from './themes/theme-auth';
 
 class ForgotPass extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            password: '',
+            email: '',
             submit: 'Send mail',
-            visible: false
+            visible: false,
+            error: false,
+            errorMessage: ''
         };
         // Change status bar color to white
         StatusBar.setBarStyle('light-content');
-        
     }
   
     render() {
+        if(this.state.error) {
+          var baliseError = <Text style={{color: '#ec4363'}}>{this.state.errorMessage}</Text>
+        } else {
+          var baliseError = null
+        }
         return (   
           <Container style={{backgroundColor : '#1abc9c'}}>
             <Content theme={myTheme}>
               <Spinner visible={this.state.visible} />
               <Grid>
-                <Row style={{marginTop: 75}}>
-                  <Col style={{flex: .3}}></Col>
-                  <Col style={{flex: .4}}>
-                    <Icon name='ios-camera-outline' style={{fontSize: 200, color: 'white', marginBottom: 100}}/>
+                <Row style={{height: 250}}>
+                  <Col alignItems='center' justifyContent='center'>
+                    <Icon name='ios-camera-outline' style={{fontSize: 200, color: 'white'}}/>
                   </Col>
-                  <Col style={{flex: .3}}></Col>
                 </Row>
-                <Row style={{marginTop: 90}}>
-                  <Col style={{flex: .05}}></Col>
-                  <Col style={{flex: .9}}>     
+                <Row size={10}>
+                  <Col size={10}></Col>
+                  <Col size={80} alignItems='center' justifyContent='center'>
+                    {baliseError}
+                  </Col>
+                  <Col size={10}></Col>
+                </Row>
+                <Row size={90} style={{paddingTop: 25, paddingBottom: 50}}>
+                  <Col size={10}></Col>
+                  <Col size={80}>     
                     <InputGroup> 
                       <Icon name='ios-at-outline' style={{color: 'white'}}/>
                       <Input placeholder='Email' autoCapitalize='none' onChangeText={(email) => this.setState({email})}/>
                     </InputGroup>
-                    <Button block bordered style={{marginTop: 15}} onPress={() => {
-                        this.setState({visible : true});
-                      }}>{this.state.submit}</Button>
-                    <Button block transparent small style={{marginTop: 20}} onPress={() => {this.props.navigator.pop()}}> Return to Sign In  </Button>
+                    <Button block bordered style={{marginTop: 25}} disabled>{this.state.submit}</Button>
+                    <Button block transparent small style={{marginTop : 15}} onPress={() => {this.props.navigator.pop()}}> Return to Sign In  </Button>
                   </Col>
-                  <Col style={{flex: .05}}></Col>
+                  <Col size={10}></Col>
                 </Row>
               </Grid>
             </Content>
