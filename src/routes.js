@@ -5,6 +5,10 @@ import People from './people';
 import Camera from './camera';
 import Settings from './settings';
 import Signin from './signin';
+import Register from './signup';
+import ForgotPass from './forgot_password';
+import Setup from './setup';
+import Logout from './logout'
 
 import ExNavigator from '@exponent/react-native-navigator';
 import { Icon, Button } from 'native-base';
@@ -14,36 +18,25 @@ import {
     Text,
     Navigator,
     Alert,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    AsyncStorage
 } from 'react-native';
 
 const routes = {
-  
-    _logout() {
-      Alert.alert(
-        'Logout',
-        'Are you sure to disconnect from this app ?',
-        [
-          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {text: 'Logout', onPress: () => {
-            DeviceEventEmitter.emit('logout');
-          }, style: 'destructive'},
-        ]
-      )
-    },
-  
     reRoutePeople() {
       return {
         getTitle() {
             return '';
         },
         renderScene(navigator) {
-            return <ExNavigator
-                    navigator={navigator}
-                    initialRoute={routes.peopleRoute()}
-                    showNavigationBar={true}
-                    navigationBarStyle={{backgroundColor: '#1abc9c'}}
-                />;
+            return (
+              <ExNavigator
+                  navigator={navigator}
+                  initialRoute={routes.peopleRoute()}
+                  showNavigationBar={true}
+                  navigationBarStyle={{backgroundColor: '#1abc9c'}}
+              />
+            );
         },
         configureScene() {
             return Navigator.SceneConfigs.FloatFromLeft
@@ -64,7 +57,7 @@ const routes = {
             },
             renderRightButton(navigator) {
                 return (
-                  <Button transparent style={{marginRight: 10, marginTop: 5}}>
+                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
                     <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
                   </Button>
                 );
@@ -85,7 +78,7 @@ const routes = {
             },
             renderRightButton(navigator) {
                 return (
-                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => {routes._logout()}}>
+                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
                     <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
                   </Button>
                 );
@@ -106,7 +99,7 @@ const routes = {
             },
             renderRightButton(navigator) {
                 return (
-                  <Button transparent style={{marginRight: 10, marginTop: 5}}>
+                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
                     <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
                   </Button>
                 );
@@ -126,6 +119,34 @@ const routes = {
                 return Navigator.SceneConfigs.FloatFromLeft
             },
         };
+    },
+  
+    signupRoute() {
+      return {
+          getTitle() {
+              return 'Register';
+          },
+          renderScene(navigator) {
+              return <Register navigator={navigator}/>;
+          },
+          configureScene() {
+              return Navigator.SceneConfigs.FloatFromLeft
+          },
+      };
+    },
+  
+    forgotPassRoute() {
+      return {
+          getTitle() {
+              return 'Forgot password';
+          },
+          renderScene(navigator) {
+              return <ForgotPass navigator={navigator}/>;
+          },
+          configureScene() {
+              return Navigator.SceneConfigs.FloatFromLeft
+          },
+      };
     },
 
 }

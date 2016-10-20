@@ -26,16 +26,13 @@ class People extends Component {
             token: null,
         };
         // Change status bar color to white
+        console.log("current_id : " + JSON.parse(window.CURRENT_USER))
         StatusBar.setBarStyle('light-content');
-
-        console.log("current_id : "+JSON.parse(window.CURRENT_USER))
     }
 
     render() {
         return ( 
           <Container> 
-
-
             <Content>
                 <Text>
                 </Text>

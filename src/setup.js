@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import ExNavigator from '@exponent/react-native-navigator';
 import Spinner from 'react-native-loading-spinner-overlay';
 import routes from './routes';
-import { View, AsyncStorage, DeviceEventEmitter } from 'react-native'
+import { View, AsyncStorage } from 'react-native';
+import Orientation from 'react-native-orientation';
 
 window.STORAGE_TOKEN = null;
 window.STORAGE_USER_ID = null;
@@ -19,17 +20,11 @@ class Setup extends Component {
           loading: true,
           connected: false,
         };
-    }
-  
+    } 
+      
     componentDidMount() {
-      // Add listner
-      DeviceEventEmitter.addListener('logout', () => {
-        AsyncStorage.removeItem('user_id').then(() => {
-           AsyncStorage.removeItem('user_token').then(() => {
-             this.setState({connected: false});
-           })
-        });
-      })
+      // Lock orientation
+      Orientation.lockToPortrait();
       // Get async storage values
       try {
         AsyncStorage.getItem('user_token')
@@ -63,7 +58,7 @@ class Setup extends Component {
     render() {
       if (this.state.loading) {
         return(
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor : '#1abc9c' }}>
             <Spinner visible={this.state.loading} />
           </View>)
       }
