@@ -26,9 +26,9 @@ class People extends Component {
             token: null,
         };
         // Change status bar color to white
-        StatusBar.setBarStyle('default');
-        console.log("current_id : "+JSON.parse(window.CURRENT_USER))
         StatusBar.setBarStyle('light-content');
+
+        console.log("current_id : "+JSON.parse(window.CURRENT_USER))
     }
 
     render() {
