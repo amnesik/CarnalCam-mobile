@@ -6,8 +6,11 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import routes from './routes';
 import { View, AsyncStorage, DeviceEventEmitter } from 'react-native'
 
-var STORAGE_TOKEN = null;
-var STORAGE_USER_ID = null;
+window.STORAGE_TOKEN = null;
+window.STORAGE_USER_ID = null;
+window.SERVER_IP = '178.62.14.241';
+window.SERVER_PORT = '1337';
+window.CURRENT_USER = null;
 
 class Setup extends Component {
     constructor(props) {
@@ -32,19 +35,21 @@ class Setup extends Component {
         AsyncStorage.getItem('user_token')
         .then( (value) =>
           {
-            STORAGE_TOKEN = value
+            window.STORAGE_TOKEN = value
             return AsyncStorage.getItem("user_id")
           }
         )
         .then( (value) =>
           {
-            STORAGE_USER_ID = value
+            window.STORAGE_USER_ID = value
             // Control values
-            console.log('Token : ' + STORAGE_TOKEN);
-            console.log('User ID : ' + STORAGE_USER_ID);
+            console.log('Token : ' + window.STORAGE_TOKEN);
+            console.log('User ID : ' + window.STORAGE_USER_ID);
 
-            if(STORAGE_TOKEN !== null && STORAGE_USER_ID !== null) {
+            if(window.STORAGE_TOKEN !== null && window.STORAGE_USER_ID !== null) {
               this.setState({loading: false, connected: true});
+            }else{
+                this.setState({loading: false, connected: false});
             }
           }
         )

@@ -10,15 +10,13 @@ import {
     TextInput,
     TouchableHighlight,
     Text,
-    StatusBar
+    StatusBar,
+    ListView
 } from 'react-native'
 
 import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
-
-var STORAGE_TOKEN = '@AsyncStorageToken:key';
-var STORAGE_USER_ID = '@AsyncStorageUserID:key';
 
 class People extends Component {
     constructor(props) {
@@ -37,7 +35,8 @@ class People extends Component {
 
 
             <Content>
-                    
+                <Text>
+                </Text>
             </Content>
             
             <Footer theme={myTheme}>
