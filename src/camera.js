@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 
 import routes from './routes';
+import myTheme from './themes/theme-footer';
 
 var STORAGE_TOKEN = '@AsyncStorageToken:key';
 var STORAGE_USER_ID = '@AsyncStorageUserID:key';
@@ -29,7 +30,7 @@ class Camera extends Component {
                     
             </Content>
             
-            <Footer>
+            <Footer theme={myTheme}>
               <FooterTab>
                 <Button onPress={() => {
                         this.props.navigator.replace(routes.peopleRoute())

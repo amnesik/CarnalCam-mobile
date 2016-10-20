@@ -16,6 +16,7 @@ import {
 
 import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
+import myTheme from './themes/theme-footer';
 
 class People extends Component {
     constructor(props) {
@@ -27,6 +28,7 @@ class People extends Component {
         // Change status bar color to white
         StatusBar.setBarStyle('default');
         console.log("current_id : "+JSON.parse(window.CURRENT_USER))
+        StatusBar.setBarStyle('light-content');
     }
 
     render() {
@@ -39,7 +41,7 @@ class People extends Component {
                 </Text>
             </Content>
             
-            <Footer>
+            <Footer theme={myTheme}>
               <FooterTab>
                 <Button active>
                   People
