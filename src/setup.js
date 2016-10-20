@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import ExNavigator from '@exponent/react-native-navigator';
 import Spinner from 'react-native-loading-spinner-overlay';
 import routes from './routes';
-import { View, AsyncStorage } from 'react-native'
+import { View, AsyncStorage, DeviceEventEmitter } from 'react-native'
 
 var STORAGE_TOKEN = null;
 var STORAGE_USER_ID = null;
@@ -19,6 +19,14 @@ class Setup extends Component {
     }
   
     componentDidMount() {
+      // Add listner
+      DeviceEventEmitter.addListener('logout', () => {
+        AsyncStorage.removeItem('user_id').then(() => {
+           AsyncStorage.removeItem('user_token').then(() => {
+             this.setState({connected: false});
+           })
+        });
+      })
       // Get async storage values
       try {
         AsyncStorage.getItem('user_token')

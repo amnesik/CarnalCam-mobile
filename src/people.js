@@ -15,6 +15,7 @@ import {
 
 import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
+import myTheme from './themes/theme-footer';
 
 var STORAGE_TOKEN = '@AsyncStorageToken:key';
 var STORAGE_USER_ID = '@AsyncStorageUserID:key';
@@ -27,7 +28,7 @@ class People extends Component {
             token: null,
         };
         // Change status bar color to white
-        StatusBar.setBarStyle('default');
+        StatusBar.setBarStyle('light-content');
     }
 
     render() {
@@ -39,7 +40,7 @@ class People extends Component {
                     
             </Content>
             
-            <Footer>
+            <Footer theme={myTheme}>
               <FooterTab>
                 <Button active>
                   People
