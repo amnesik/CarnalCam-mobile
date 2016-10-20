@@ -19,9 +19,6 @@ import {
 import routes from './routes';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const SERVER_IP = '178.62.14.241';
-const SERVER_PORT = '1337';
-
 class Signin extends Component {
     constructor(props) {
         super(props);
@@ -40,7 +37,7 @@ class Signin extends Component {
     }
   
     _executeQuery() {
-      fetch('http://'+SERVER_IP+':'+SERVER_PORT+'/auth/signin', {
+      fetch('http://'+window.SERVER_IP+':'+window.SERVER_PORT+'/auth/signin', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
@@ -56,6 +53,7 @@ class Signin extends Component {
             try {
               AsyncStorage.setItem('user_id',  JSON.stringify(resJson.user.id));
               AsyncStorage.setItem('user_token',  JSON.stringify(resJson.token));
+              window.CURRENT_USER = JSON.stringify(resJson.user);
               this.props.navigator.replace(routes.reRoutePeople())
             } catch (error) {
                console.log('Async Storage Set : ' + error);
