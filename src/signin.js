@@ -53,8 +53,9 @@ class Signin extends Component {
             try {
               AsyncStorage.setItem('user_id',  JSON.stringify(resJson.user.id));
               AsyncStorage.setItem('user_token',  JSON.stringify(resJson.token));
-              window.CURRENT_USER = resJson.user;
-              this.props.navigator.replace(routes.reRoutePeople());
+
+              window.CURRENT_USER = JSON.stringify(resJson.user);
+              this.props.navigator.replace(routes.reRoutePeople())
             } catch (error) {
                console.log('Async Storage Set : ' + error);
             } 
