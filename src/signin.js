@@ -1,7 +1,11 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { Component, } from 'react';
+import { Container, Header, InputGroup, Content, Col, Row, Input, Grid, Button, Icon } from 'native-base';
+import Orientation from 'react-native-orientation';
+import myTheme from './themes/theme-auth';
 import {
+  StatusBar,
   AsyncStorage,
   AppRegistry,
   View,
@@ -9,132 +13,97 @@ import {
     TextInput,
     TouchableHighlight,
     Text,
-    ActivityIndicator
+    ActivityIndicator,
 } from 'react-native'
 
 import routes from './routes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-var STORAGE_TOKEN = '@AsyncStorageToken:key';
-var STORAGE_USER_ID = '@AsyncStorageUserID:key';
+const SERVER_IP = '178.62.14.241';
+const SERVER_PORT = '1337';
 
 class Signin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            password: '',
-            isLoading: false,
+            username: null,
+            password: null,
+            submit: 'Sign In',
+            visible: true
         };
+        // Change status bar color to white
+        StatusBar.setBarStyle('light-content');
     }
 
-    onUsernameChanged(event) {
-        this.setState({ username: event.nativeEvent.text });
-        console.log(this.state.username);
+    componentDidMount() {
+      Orientation.lockToPortrait();
     }
-    onPasswordChanged(event) {
-        this.setState({ password: event.nativeEvent.text });
-        console.log(this.state.password);
-    }
-
+  
     _executeQuery() {
-        fetch('http://localhost:1337/auth/signin', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                identifier: 'carnal',
-                password: 'carnal',
-            })
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                console.log('------- RESPONSE -------'+responseJson.token);
-                AsyncStorage.setItem(STORAGE_TOKEN, JSON.stringify(responseJson.token));
-                AsyncStorage.setItem(STORAGE_USER_ID, JSON.stringify(responseJson.user.id));
-                this.setState({ isLoading: false })
-                this.props.navigator.push(routes.homeRoute())
-            })
-            .catch((error) => {
-                console.error('------- ERROR -------'+error);
-                this.setState({ isLoading: false })
-            });
+      fetch('http://'+SERVER_IP+':'+SERVER_PORT+'/auth/signin', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              identifier: this.state.username,
+              password:  this.state.password,
+          })
+      }).then( (res) => res.json())
+        .then( (resJson) => {
+            console.log('------- RESPONSE -------' + resJson);
+            try {
+              AsyncStorage.setItem('user_id',  JSON.stringify(resJson.user.id));
+              AsyncStorage.setItem('user_token',  JSON.stringify(resJson.token));
+              this.props.navigator.replace(routes.reRoutePeople())
+            } catch (error) {
+               console.log('Async Storage Set : ' + error);
+            } 
+        })
+        .catch( (error) => {
+            console.error('------- ERROR -------' + error);
+        });
     }
-
+  
     render() {
-        var spinner = this.state.isLoading ?
-            ( <ActivityIndicator
-                size='large'/> ) :
-            ( <View/>);
         return (
-            <View style={styles.container}>
-                <View style={styles.flowRight}>
-                    <TextInput
-                        onChange={this.onUsernameChanged.bind(this)}
-                        style={styles.searchInput}
-                        placeholder='Username'/>
-                </View>
-                <View style={styles.flowRight}>
-                    <TextInput
-                        onChange={this.onPasswordChanged.bind(this)}
-                        style={styles.searchInput}
-                        placeholder='Password'/>
-                </View>
-                <TouchableHighlight style={styles.button}
-                                    underlayColor='#99d9f4'
-                                    onPress={() => {
-                                        this.setState({ isLoading: true })
-                                        this._executeQuery()
-                                    }}
-                >
-                    <Text style={styles.buttonText}>Sign in</Text>
-                </TouchableHighlight>
-                {spinner}
-            </View>
+          <Container style={{backgroundColor : '#1abc9c'}}>
+            <Content theme={myTheme}>
+              <Spinner visible={this.state.visible} />
+              <Grid>
+                <Row style={{marginTop: 75}}>
+                  <Col style={{flex: .3}}></Col>
+                  <Col style={{flex: .4}}>
+                    <Icon name='ios-camera-outline' style={{fontSize: 200, color: 'white', marginBottom: 100}}/>
+                  </Col>
+                  <Col style={{flex: .3}}></Col>
+                </Row>
+                <Row style={{marginTop: 90}}>
+                  <Col style={{flex: .05}}></Col>
+                  <Col style={{flex: .9}}>     
+                    <InputGroup> 
+                      <Icon name='ios-person' style={{color: 'white'}}/>
+                      <Input placeholder='Username' autoCapitalize='none' onChangeText={(username) => this.setState({username})}/>
+                    </InputGroup>
+                    <InputGroup>
+                      <Icon name='ios-unlock' style={{color: 'white'}}/>
+                      <Input placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
+                    </InputGroup>
+                    <Button block bordered style={{marginTop: 15}} onPress={() => {
+                        this.setState({visible : true});
+                        this._executeQuery();
+                      }}>{this.state.submit}</Button>
+                    <Button block transparent small style={{marginTop: 20}}> Register </Button>
+                    <Button block transparent small> Forgot password ? </Button>
+                  </Col>
+                  <Col style={{flex: .05}}></Col>
+                </Row>
+              </Grid>
+            </Content>
+          </Container>
         );
-
     }
 }
-
-var styles = StyleSheet.create({
-    container: {
-        padding: 30,
-        marginTop: 65,
-        alignItems: 'center'
-    },
-    flowRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'stretch'
-    },
-    buttonText: {
-        fontSize: 18,
-        color: 'white',
-        alignSelf: 'center'
-    },
-    button: {
-        height: 36,
-        flex: 1,
-        flexDirection: 'row',
-        backgroundColor: '#48BBEC',
-        borderColor: '#48BBEC',
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 10,
-        alignSelf: 'stretch',
-        justifyContent: 'center'
-    },
-    searchInput: {
-        height: 36,
-        padding: 4,
-        marginRight: 5,
-        flex: 4,
-        fontSize: 18,
-        borderWidth: 1,
-        borderColor: '#48BBEC',
-        borderRadius: 8,
-        color: '#48BBEC'
-    }
-});
 
 module.exports = Signin;

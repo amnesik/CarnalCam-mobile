@@ -10,7 +10,9 @@
     "@exponent/react-native-navigator": "^0.4.9",
     "native-base": "^0.5.9",
     "react": "15.3.2",
-    "react-native": "0.35.0"
+    "react-native": "0.35.0",
+    "react-native-loading-spinner-overlay": "^0.3.0",
+    "react-native-orientation": "^1.17.0"
   },
   "jest": {
     "preset": "jest-react-native"
