@@ -12,36 +12,37 @@ import Register from './signup';
 import ForgotPass from './forgot_password';
 import Setup from './setup';
 import Logout from './logout'
+import Showcam from './showcam';
 
 import ExNavigator from '@exponent/react-native-navigator';
 
 
 const routes = {
     reRoutePeople() {
-      return {
-        getTitle() {
-            return '';
-        },
-        renderScene(navigator) {
-            return (
-              <ExNavigator
-                  navigator={navigator}
-                  initialRoute={routes.peopleRoute()}
-                  showNavigationBar={true}
-                  navigationBarStyle={{backgroundColor: '#1abc9c'}}
-              />
-            );
-        },
-        configureScene() {
-            return Navigator.SceneConfigs.PushFromRight
-        },
-      };
+        return {
+            getTitle() {
+                return '';
+            },
+            renderScene(navigator) {
+                return (
+                    <ExNavigator
+                        navigator={navigator}
+                        initialRoute={routes.peopleRoute()}
+                        showNavigationBar={true}
+                        navigationBarStyle={{backgroundColor: '#1abc9c'}}
+                    />
+                );
+            },
+            configureScene() {
+                return Navigator.SceneConfigs.PushFromRight
+            },
+        };
     },
 
     peopleRoute() {
         return {
             getTitle() {
-              return <Text style={{color: 'white'}}>People</Text>;
+                return <Text style={{color: 'white'}}>People</Text>;
             },
             renderScene(navigator) {
                 return <People navigator={navigator}/>;
@@ -51,14 +52,14 @@ const routes = {
             },
             renderRightButton(navigator) {
                 return (
-                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                    <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
-                  </Button>
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
+                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
+                    </Button>
                 );
             },
         };
     },
-  
+
     cameraRoute() {
         return {
             getTitle() {
@@ -72,14 +73,14 @@ const routes = {
             },
             renderRightButton(navigator) {
                 return (
-                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                    <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
-                  </Button>
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
+                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
+                    </Button>
                 );
             },
         };
     },
-  
+
     settingsRoute() {
         return {
             getTitle() {
@@ -93,9 +94,9 @@ const routes = {
             },
             renderRightButton(navigator) {
                 return (
-                  <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                    <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
-                  </Button>
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
+                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
+                    </Button>
                 );
             },
         };
@@ -114,34 +115,62 @@ const routes = {
             },
         };
     },
-  
+
     signupRoute() {
-      return {
-          getTitle() {
-              return 'Register';
-          },
-          renderScene(navigator) {
-              return <Register navigator={navigator}/>;
-          },
-          configureScene() {
-              return Navigator.SceneConfigs.PushFromRight
-          },
-      };
+        return {
+            getTitle() {
+                return 'Register';
+            },
+            renderScene(navigator) {
+                return <Register navigator={navigator}/>;
+            },
+            configureScene() {
+                return Navigator.SceneConfigs.PushFromRight
+            },
+        };
     },
-  
+
     forgotPassRoute() {
-      return {
-          getTitle() {
-              return 'Forgot password';
-          },
-          renderScene(navigator) {
-              return <ForgotPass navigator={navigator}/>;
-          },
-          configureScene() {
-              return Navigator.SceneConfigs.PushFromRight
-          },
-      };
+        return {
+            getTitle() {
+                return 'Forgot password';
+            },
+            renderScene(navigator) {
+                return <ForgotPass navigator={navigator}/>;
+            },
+            configureScene() {
+                return Navigator.SceneConfigs.PushFromRight
+            },
+        };
     },
+
+    showcamRoute() {
+        return {
+            getTitle() {
+                return 'Show Cam';
+            },
+            renderScene(navigator) {
+                return <Showcam navigator={navigator}/>;
+            },
+            configureScene() {
+                return Navigator.SceneConfigs.PushFromRight
+            },
+            renderLeftButton(navigator) {
+                return (
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => navigator.pop() }>
+                        <Icon name='ios-arrow-back' style={{color: 'white'}}/>
+                    </Button>
+                );
+            },
+            renderRightButton(navigator) {
+                return (
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
+                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
+                    </Button>
+                );
+            },
+        };
+    }
 
 }
 export default routes;
