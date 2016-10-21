@@ -14,8 +14,6 @@ class People extends Component {
             userid: null,
             token: null,
         };
-        // Change status bar color to white
-        console.log("current_id : " + JSON.parse(window.CURRENT_USER))  
     }
 
     render() {

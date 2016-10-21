@@ -1,18 +1,17 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View, AsyncStorage, StatusBar } from 'react-native';
 
 import ExNavigator from '@exponent/react-native-navigator';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Orientation from 'react-native-orientation';
 import routes from './routes';
 
-window.STORAGE_TOKEN = null;
-window.STORAGE_USER_ID = null;
+var User = require('./Globals/User');
+
 window.SERVER_IP = '178.62.14.241';
 window.SERVER_PORT = '1337';
-window.CURRENT_USER = null;
 
 class Setup extends Component {
     constructor(props) {
@@ -21,6 +20,8 @@ class Setup extends Component {
           loading: true,
           connected: false,
         };
+        // Change status bar color to white
+        StatusBar.setBarStyle('light-content');
     } 
       
     componentDidMount() {
@@ -28,23 +29,21 @@ class Setup extends Component {
       Orientation.lockToPortrait();
       // Get async storage values
       try {
-        AsyncStorage.getItem('user_token')
-        .then( (value) =>
-          {
-            window.STORAGE_TOKEN = value
-            return AsyncStorage.getItem("user_id")
-          }
-        )
-        .then( (value) =>
-          {
-            window.STORAGE_USER_ID = value
-            // Control values
-            console.log('Token : ' + window.STORAGE_TOKEN);
-            console.log('User ID : ' + window.STORAGE_USER_ID);
-
-            if(window.STORAGE_TOKEN !== null && window.STORAGE_USER_ID !== null) {
-              this.setState({loading: false, connected: true});
-            }else{
+        AsyncStorage.getItem('user')
+        .then( (value) => 
+          {           
+            console.log('User Async : ' + value);
+            if(value !== null) {
+              const jsonUser = JSON.parse(value);
+              console.log(jsonUser);
+              User.setCurrentUser(jsonUser);
+              // Control values
+              if(jsonUser.user.id !== null && jsonUser.token !== null) {
+                this.setState({loading: false, connected: true});
+              } else {
+                this.setState({loading: false, connected: false});
+              }
+            } else {
               this.setState({loading: false, connected: false});
             }
           }

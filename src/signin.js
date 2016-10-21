@@ -2,7 +2,7 @@
 
 import React, { Component, } from 'react';
 import { Container, InputGroup, Content, Col, Row, Input, Grid, Button, Icon } from 'native-base';
-import { StatusBar, AsyncStorage, Text } from 'react-native'
+import { AsyncStorage, Text } from 'react-native'
 
 import routes from './routes';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -18,10 +18,7 @@ class Signin extends Component {
             visible: false,
             error: false,
             errorMessage: ''
-        };
-        // Change status bar color to white
-        StatusBar.setBarStyle('light-content');
-        
+        };    
     }
   
     _executeQuery() {
@@ -38,17 +35,27 @@ class Signin extends Component {
             })
         }).then( (res) => res.json())
           .then( (resJson) => {
-              console.log('------- RESPONSE -------' + resJson);
+            if(resJson !== null) {
+              console.log('------- RESPONSE -------');
+              console.log(resJson)
               try {
-                AsyncStorage.setItem('user_id',  JSON.stringify(resJson.user.id));
-                AsyncStorage.setItem('user_token',  JSON.stringify(resJson.token));
-                window.CURRENT_USER = JSON.stringify(resJson.user);
-                this.props.navigator.replace(routes.reRoutePeople());
+                AsyncStorage.setItem('user',  JSON.stringify(resJson), () => {
+                  this.props.navigator.replace(routes.reRoutePeople());
+                })
               } catch (error) {
                  console.log('Async Storage Set : ' + error);
-              } 
+              }              
+            } else {
+              this.setState({
+                error: true,
+                errorMessage: 'Username or Password is wrong',
+                visible: false
+              })
+            }
+              
           })
           .catch( (error) => {
+            console.log(error);
             this.setState({
               error: true,
               errorMessage: 'Network failed, server maybe down',
@@ -105,8 +112,18 @@ class Signin extends Component {
                         });
                         this._executeQuery();
                       }}>{this.state.submit}</Button>
-                    <Button block transparent small style={{marginTop: 15}} onPress={() => {this.props.navigator.push(routes.signupRoute())}}> Register </Button>
-                    <Button block transparent small onPress={() => {this.props.navigator.push(routes.forgotPassRoute())}}> Forgot password ? </Button>
+                    <Button block transparent small style={{marginTop: 15}} onPress={() => {
+                        this.setState({
+                          error: false
+                        });
+                        this.props.navigator.push(routes.signupRoute())
+                      }}> Register </Button>
+                    <Button block transparent small onPress={() => {
+                        this.setState({
+                          error: false
+                        });
+                        this.props.navigator.push(routes.forgotPassRoute())
+                      }}> Forgot password ? </Button>
                   </Col>
                   <Col size={10}></Col>
                 </Row>
