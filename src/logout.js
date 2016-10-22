@@ -15,10 +15,8 @@ const logout = {
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'Logout', onPress: () => {
-          AsyncStorage.removeItem('user_id').then(() => {
-             AsyncStorage.removeItem('user_token').then(() => {
-                navigator.parentNavigator.replace(Routes.signinRoute());
-             })
+          AsyncStorage.removeItem('user').then(() => {
+             navigator.parentNavigator.replace(Routes.signinRoute());
           });
         }, style: 'destructive'},
       ]

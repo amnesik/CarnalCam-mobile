@@ -8,6 +8,8 @@ import routes from './routes';
 import Spinner from 'react-native-loading-spinner-overlay';
 import myTheme from './themes/theme-auth';
 
+var User = require('./Globals/User');
+
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -63,10 +65,10 @@ class Register extends Component {
             .then( (resJson) => {
                 console.log('------- RESPONSE -------' + resJson);
                 try {
-                  AsyncStorage.setItem('user_id',  JSON.stringify(resJson.user.id));
-                  AsyncStorage.setItem('user_token',  JSON.stringify(resJson.token));
-                  window.CURRENT_USER = resJson.user;
-                  this.props.navigator.replace(routes.reRoutePeople());
+                  AsyncStorage.setItem('user',  JSON.stringify(resJson), () => {
+                    User.setCurrentUser(resJson);
+                    this.props.navigator.replace(routes.reRoutePeople());
+                  })
                 } catch (error) {
                    console.log('Async Storage Set : ' + error);
                 } 

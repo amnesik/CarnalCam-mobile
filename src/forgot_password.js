@@ -13,7 +13,7 @@ class ForgotPass extends Component {
         super(props);
         this.state = {
             email: '',
-            submit: 'Send mail',
+            submit: 'Send email',
             visible: false,
             error: false,
             errorMessage: ''

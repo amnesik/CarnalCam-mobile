@@ -8,6 +8,8 @@ import routes from './routes';
 import Spinner from 'react-native-loading-spinner-overlay';
 import myTheme from './themes/theme-auth';
 
+var User = require('./Globals/User');
+
 class Signin extends Component {
     constructor(props) {
         super(props);
@@ -40,6 +42,7 @@ class Signin extends Component {
               console.log(resJson)
               try {
                 AsyncStorage.setItem('user',  JSON.stringify(resJson), () => {
+                  User.setCurrentUser(resJson);
                   this.props.navigator.replace(routes.reRoutePeople());
                 })
               } catch (error) {

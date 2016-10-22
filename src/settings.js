@@ -1,7 +1,8 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, List, ListItem, Text, InputGroup, Input } from 'native-base';
+import { Container, Title, Content, Footer, FooterTab, Button, Icon, List, ListItem, InputGroup, Input, Spinner,Badge, Text } from 'native-base';
+import { View } from 'react-native';
 
 import routes from './routes';
 import myTheme from './themes/theme-footer';
@@ -16,22 +17,81 @@ class Settings extends Component {
             username: 'nc',
             email: 'nc',
             firstName: 'nc',
-            lastName: 'nc'
+            lastName: 'nc',
+            loadingGrp: true,
+            error: false,
+            jsonUser: User.getCurrentUser(),
+            groups: null
         }
-        
     }
   
     componentWillMount() {
-      const jsonUser = User.getCurrentUser();
       this.setState({
-        username: jsonUser.user.username,
-        email: jsonUser.user.email,
-        firstName: jsonUser.user.firstName,
-        lastName: jsonUser.user.lastName,
-      })
+        username: this.state.jsonUser.user.username,
+        email: this.state.jsonUser.user.email,
+        firstName: this.state.jsonUser.user.firstName,
+        lastName: this.state.jsonUser.user.lastName,
+      });
+      this._getUserGroups();
+    }
+    
+    _updateProfil() {
+      
+    }
+  
+    _getUserGroups() {
+      if(this.state.username !== '' && this.state.password !== '') {
+        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.state.jsonUser.user.id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'JWT ' + this.state.jsonUser.token
+            }
+        }).then( (res) => res.json())
+          .then( (resJson) => {
+            if(resJson !== null) {
+              console.log('------- RESPONSE -------');
+              console.log('------- GROUPS -------');
+              console.log(resJson.groups.length);
+              if(resJson.groups.length !== 0) {
+                // Put they groups into var
+                this.setState({
+                  groups: resJson.groups,
+                  loadingGrp: false,
+                });
+              } else {
+                this.setState({
+                  groups: JSON.parse('[{"name" : "No group available"}]'),
+                  loadingGrp: false,
+                }); 
+              }    
+            }  
+          })
+          .catch( (error) => {
+            console.log(error);
+          });
+      }  
     }
 
     render() {
+        var grpContent;
+        
+        if(this.state.loadingGrp) {
+          var grpContent = (<Spinner />);
+        } else {
+          var grpContent = (
+            <List dataArray={this.state.groups}
+              renderRow={(group) =>
+                  <ListItem>
+                      <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
+                      <Badge>0</Badge>
+                  </ListItem>
+              }>
+            </List>
+          );
+        }
+      
         return (
           <Container> 
             <Content style={{marginTop: 64}} theme={myThemeView}>
@@ -67,8 +127,9 @@ class Settings extends Component {
                    <Button block bordered> Update profil </Button>
                 </ListItem>
                 <ListItem itemDivider>
-                    <Text>Availables groups</Text>
+                    <Text>Availables user groups</Text>
                 </ListItem>  
+                {grpContent}
               </List> 
             </Content>
             
