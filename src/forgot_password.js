@@ -1,8 +1,8 @@
 'use strict';
 
 import React, { Component, } from 'react';
-import { Container, InputGroup, Content, Col, Row, Input, Grid, Button, Icon } from 'native-base';
-import { StatusBar } from 'react-native';
+import { Container, InputGroup, Content, Col, Row, Input, Grid, Button, Icon, Text } from 'native-base';
+import { StatusBar, Alert } from 'react-native';
 
 import routes from './routes';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -14,12 +14,58 @@ class ForgotPass extends Component {
         this.state = {
             email: '',
             submit: 'Send email',
-            visible: false,
             error: false,
             errorMessage: ''
         };
         // Change status bar color to white
         StatusBar.setBarStyle('light-content');
+    }
+    
+    _checkMailAddress(email) {
+      var regEx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return regEx.test(email);
+    }
+  
+    _forgotPassword() {
+      if(this.state.email !== null || this.state.email.length !== 0 || this._checkMailAddress(this.state.email)) {
+        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/auth/forgot', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+            })
+        }).then( (res) => {
+          console.log(res.status);
+          if(res.status !== 200) {
+            throw new Error(res.json());
+          }
+          this._showPopUp();
+        }).catch ( (resJson) => {
+          // Check return
+          this.setState({
+            error : true,
+            errorMessage : resJson.message
+          })
+        })
+      } else {
+        this.setState({
+          error : true,
+          errorMessage : 'Address email not valid'
+        })
+      }
+    }
+  
+    _showPopUp() {
+      Alert.alert(
+        'Forgot Password',
+        'Activation link is already send by email',
+        [
+          {text: 'OK', onPress: () => this.props.navigator.pop()}
+        ]
+      )
     }
   
     render() {
@@ -31,7 +77,6 @@ class ForgotPass extends Component {
         return (   
           <Container style={{backgroundColor : '#1abc9c'}}>
             <Content theme={myTheme}>
-              <Spinner visible={this.state.visible} />
               <Grid>
                 <Row style={{height: 250}}>
                   <Col alignItems='center' justifyContent='center'>
@@ -52,7 +97,7 @@ class ForgotPass extends Component {
                       <Icon name='ios-at-outline' style={{color: 'white'}}/>
                       <Input placeholder='Email' autoCapitalize='none' onChangeText={(email) => this.setState({email})}/>
                     </InputGroup>
-                    <Button block bordered style={{marginTop: 25}} disabled>{this.state.submit}</Button>
+                    <Button block bordered style={{marginTop: 25}} onPress={() => this._forgotPassword()}>{this.state.submit}</Button>
                     <Button block transparent small style={{marginTop : 15}} onPress={() => {this.props.navigator.pop()}}> Return to Sign In  </Button>
                   </Col>
                   <Col size={10}></Col>

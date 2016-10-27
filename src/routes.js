@@ -13,6 +13,7 @@ import ForgotPass from './forgot_password';
 import Setup from './setup';
 import Logout from './logout'
 import Showcam from './showcam';
+import Showgrps from './showgrps';
 
 import ExNavigator from '@exponent/react-native-navigator';
 
@@ -164,6 +165,34 @@ const routes = {
                             console.log(e.code, e.reason);
                         };
                     }}>
+                        <Icon name='ios-arrow-back' style={{color: 'white'}}/>
+                    </Button>
+                );
+            },
+            renderRightButton(navigator) {
+                return (
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
+                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
+                    </Button>
+                );
+            },
+        };
+    },
+  
+    showgrps(user) {
+        return {
+            getTitle() {
+                return <Text style={{color: 'white'}}>{user.username}</Text>;
+            },
+            renderScene(navigator) {
+                return <Showgrps navigator={navigator} user={user}/>;
+            },
+            configureScene() {
+                return Navigator.SceneConfigs.PushFromRight
+            },
+            renderLeftButton(navigator) {
+                return (
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => navigator.pop() }>
                         <Icon name='ios-arrow-back' style={{color: 'white'}}/>
                     </Button>
                 );
