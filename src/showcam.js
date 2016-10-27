@@ -12,9 +12,33 @@ class Showcam extends Component {
         super(props);
     }
 
+    _turnLeft(){
+        fetch('http://127.0.0.1:8888/turn_left', {
+            method: 'GET'
+        }).then( (res) => res.json())
+            .then( (resJson) => {
+                console.log(resJson);
+            })
+            .catch( (error) => {
+                console.log(error);
+            });
+    }
+
+    _turnRight(){
+        fetch('http://127.0.0.1:8888/turn_right', {
+            method: 'GET'
+        }).then( (res) => res.json())
+            .then( (resJson) => {
+                console.log(resJson);
+            })
+            .catch( (error) => {
+                console.log(error);
+            });
+    }
+
     render() {
-        var ws = new WebSocket('ws://'+window.SERVER_IP +':'+ window.SERVER_PORT+'/path/'+this.props.currentUser.user.id);
-        if(this.props.currentUser.user.role == "manager"){
+        //var ws = new WebSocket('ws://'+window.SERVER_IP +':'+ window.SERVER_PORT+'/path/'+this.props.currentUser.user.id);
+        //if(this.props.currentUser.user.role == "manager"){
             return (
                 <Container style={{'marginTop': 64}}>
                     <Content>
@@ -27,7 +51,7 @@ class Showcam extends Component {
                     <Footer theme={myTheme}>
                         <FooterTab>
                             <Button onPress={() => {
-                                this.props.navigator.replace(routes.peopleRoute())
+                                this._turnLeft()
                             }}>
                                 Left
                                 <Icon name='ios-arrow-dropleft' />
@@ -37,7 +61,7 @@ class Showcam extends Component {
                                 <Icon name='ios-power' />
                             </Button>
                             <Button onPress={() => {
-                                this.props.navigator.replace(routes.settingsRoute())
+                                this._turnRight()
                             }}>
                                 Right
                                 <Icon name='ios-arrow-dropright' />
@@ -46,7 +70,7 @@ class Showcam extends Component {
                     </Footer>
                 </Container>
             );
-        }else {
+       /* }else {
             return (
                 <Container style={{'marginTop': 64}}>
                     <Content>
@@ -61,7 +85,7 @@ class Showcam extends Component {
                     </Footer>
                 </Container>
             );
-        }
+        }*/
     }
 }
 
