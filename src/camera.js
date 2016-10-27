@@ -12,11 +12,11 @@ class Camera extends Component {
         this.state = {
             items: [1,1,1,1,1,1,1]
         };
-        // Change status bar color to white
-        //console.log("current_id : " + JSON.parse(window.CURRENT_USER))
     }
 
     render() {
+        var ws = new WebSocket('ws://'+window.SERVER_IP +':'+ window.SERVER_PORT+'/path/'+this.props.currentUser.user.id);
+
         return (
             <Container style={{marginTop: 64}}>
                 <Content>
@@ -24,6 +24,11 @@ class Camera extends Component {
                           renderRow={(item) =>
                               <ListItem onPress={() => {
                                   this.props.navigator.push(routes.showcamRoute())
+                                  ws.onopen = () => {
+                                      // connection opened
+
+                                      ws.send('User : '+this.props.currentUser.user.id+ ': connection camera :'+item); // send a message
+                                  };
                               }}>
                                   <Thumbnail square size={80}
                                              source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}/>

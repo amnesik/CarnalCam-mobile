@@ -151,7 +151,7 @@ const routes = {
                 return <Text style={{color: 'white'}}>Show</Text>;
             },
             renderScene(navigator) {
-                return <Showcam navigator={navigator} user={User.getCurrentUser()}/>;
+                return <Showcam navigator={navigator} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight

@@ -8,40 +8,59 @@ import routes from './routes';
 import myTheme from './themes/theme-footer';
 
 class Showcam extends Component {
+    constructor(props) {
+        super(props);
+    }
 
     render() {
-        return (
-            <Container style={{'marginTop': 64}}>
-                <Content>
-                    <WebView
-                        source={{uri: 'https://github.com/facebook/react-native'}}
-                        style={{width: 375, height:600}}
-                    />
-                </Content>
+        if(this.props.currentUser.user.role){
+            return (
+                <Container style={{'marginTop': 64}}>
+                    <Content>
+                        <WebView
+                            source={{uri: 'https://github.com/facebook/react-native'}}
+                            style={{width: 375, height:600}}
+                        />
+                    </Content>
 
-                <Footer theme={myTheme}>
-                    <FooterTab>
-                        <Button onPress={() => {
-                            this.props.navigator.replace(routes.peopleRoute())
-                        }}>
-                            Left
-                            <Icon name='ios-arrow-dropleft' />
-                        </Button>
-                        <Button active>
-                            Photo
-                            <Icon name='ios-camera' />
-                        </Button>
-                        <Button onPress={() => {
-                            this.props.navigator.replace(routes.settingsRoute())
-                        }}>
-                            Right
-                            <Icon name='ios-arrow-dropright' />
-                        </Button>
-                    </FooterTab>
-                </Footer>
-            </Container>
-        );
+                    <Footer theme={myTheme}>
+                        <FooterTab>
+                            <Button onPress={() => {
+                                this.props.navigator.replace(routes.peopleRoute())
+                            }}>
+                                Left
+                                <Icon name='ios-arrow-dropleft' />
+                            </Button>
+                            <Button active>
+                                Photo
+                                <Icon name='ios-camera' />
+                            </Button>
+                            <Button onPress={() => {
+                                this.props.navigator.replace(routes.settingsRoute())
+                            }}>
+                                Right
+                                <Icon name='ios-arrow-dropright' />
+                            </Button>
+                        </FooterTab>
+                    </Footer>
+                </Container>
+            );
+        }else {
+            return (
+                <Container style={{'marginTop': 64}}>
+                    <Content>
+                        <WebView
+                            source={{uri: 'https://github.com/facebook/react-native'}}
+                            style={{width: 375, height:600}}
+                        />
+                    </Content>
 
+                    <Footer theme={myTheme}>
+
+                    </Footer>
+                </Container>
+            );
+        }
     }
 }
 
