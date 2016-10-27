@@ -10,7 +10,7 @@ class Camera extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [1,1,1,1,1,1,1]
+            items: [1]//this.props.currentUser.user.groups
         };
     }
 

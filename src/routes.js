@@ -20,7 +20,6 @@ import ShowCamList from './showcams';
 import ExNavigator from '@exponent/react-native-navigator';
 
 var User = require('./Globals/User');
-
 const routes = {
     reRouteGroups() {
         return {
@@ -189,7 +188,12 @@ const routes = {
             },
             renderLeftButton(navigator) {
                 return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => navigator.pop() }>
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => {navigator.pop();
+                        ws.onclose = (e) => {
+                            ws.send('User : '+this.props.currentUser.user.id+ ': quit camera :');
+                            console.log(e.code, e.reason);
+                        };
+                    }}>
                         <Icon name='ios-arrow-back' style={{color: 'white'}}/>
                     </Button>
                 );
