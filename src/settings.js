@@ -16,9 +16,8 @@ class Settings extends Component {
             email: 'nc',
             firstName: 'nc',
             lastName: 'nc',
-            loadingGrp: true,
-            error: false,
-            groups: null
+            pass: null,
+            confirmPass: null
         }
     }
   
@@ -29,66 +28,17 @@ class Settings extends Component {
         firstName: this.props.currentUser.user.firstName,
         lastName: this.props.currentUser.user.lastName,
       });
-      this._getUserGroups();
     }
     
     _updateProfil() {
       
     }
   
-    _getUserGroups() {
-      if(this.state.username !== '' && this.state.password !== '') {
-        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.props.currentUser.user.id, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'JWT ' + this.props.currentUser.token
-            }
-        }).then( (res) => res.json())
-          .then( (resJson) => {
-            if(resJson !== null) {
-              console.log('------- RESPONSE -------');
-              console.log('------- GROUPS -------');
-              console.log(resJson.groups.length);
-              if(resJson.groups.length !== 0) {
-                // Put they groups into var
-                this.setState({
-                  groups: resJson.groups,
-                  loadingGrp: false,
-                });
-              } else {
-                this.setState({
-                  groups: JSON.parse('[{"name" : "No group available"}]'),
-                  loadingGrp: false,
-                }); 
-              }    
-            }  
-          })
-          .catch( (error) => {
-            console.log(error);
-          });
-      }  
+    _updatePassword() {
+      
     }
 
-    render() {
-        var grpContent;
-        
-        if(this.state.loadingGrp) {
-          var grpContent = (<Spinner />);
-        } else {
-          var grpContent = (
-            <List dataArray={this.state.groups}
-              renderRow={(group) =>
-                  <ListItem>
-                      <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
-                      <Badge>0</Badge>
-                  </ListItem>
-              }>
-            </List>
-          );
-        }
-      
+    render() {     
         return (
           <Container> 
             <Content style={{marginTop: 64}} theme={myThemeView}>
@@ -124,18 +74,32 @@ class Settings extends Component {
                    <Button block bordered> Update profil </Button>
                 </ListItem>
                 <ListItem itemDivider>
-                    <Text>Availables user groups</Text>
-                </ListItem>  
-                {grpContent}
+                    <Text>Password</Text>
+                </ListItem>
+                <ListItem>
+                  <InputGroup>
+                      <Icon name='ios-unlock' style={{color: '#1abc9c'}}/>
+                      <Input placeholder='Password' secureTextEntry={true} onChangeText={(pass) => this.setState({pass})}/>
+                  </InputGroup>
+                </ListItem>
+                <ListItem>
+                  <InputGroup>
+                      <Icon name='ios-unlock' style={{color: '#1abc9c'}}/>
+                      <Input placeholder='Confirmation password' secureTextEntry={true} onChangeText={(confirmPass) => this.setState({confirmPass})}/>
+                  </InputGroup>
+                </ListItem>
+                <ListItem alignItems='center' justifyContent='center'>
+                   <Button block bordered> Update password </Button>
+                </ListItem>
               </List> 
             </Content>
             
             <Footer theme={myTheme}>
               <FooterTab>
                 <Button onPress={() => {
-                        this.props.navigator.replace(routes.peopleRoute())
+                        this.props.navigator.replace(routes.groupsRoute())
                       }}>
-                  People
+                  Groups
                   <Icon name='ios-people' />
                 </Button>
                 <Button onPress={() => {

@@ -42,9 +42,9 @@ class Camera extends Component {
                 <Footer theme={myTheme}>
                     <FooterTab>
                         <Button onPress={() => {
-                            this.props.navigator.replace(routes.peopleRoute())
+                            this.props.navigator.replace(routes.groupsRoute())
                         }}>
-                            People
+                            Groups
                             <Icon name='ios-people' />
                         </Button>
                         <Button active>
