@@ -4,7 +4,7 @@ import { Icon, Button } from 'native-base';
 import { Navigator, Text } from 'react-native';
 
 import React from 'react';
-import People from './people';
+import Groups from './groups';
 import Camera from './camera';
 import Settings from './settings';
 import Signin from './signin';
@@ -13,14 +13,14 @@ import ForgotPass from './forgot_password';
 import Setup from './setup';
 import Logout from './logout'
 import Showcam from './showcam';
-import Showgrps from './showgrps';
+import Showusrs from './showusrs';
 
 import ExNavigator from '@exponent/react-native-navigator';
 
 var User = require('./Globals/User');
 
 const routes = {
-    reRoutePeople() {
+    reRouteGroups() {
         return {
             getTitle() {
                 return '';
@@ -29,7 +29,7 @@ const routes = {
                 return (
                     <ExNavigator
                         navigator={navigator}
-                        initialRoute={routes.peopleRoute()}
+                        initialRoute={routes.groupsRoute()}
                         showNavigationBar={true}
                         navigationBarStyle={{backgroundColor: '#1abc9c'}}
                     />
@@ -41,13 +41,13 @@ const routes = {
         };
     },
 
-    peopleRoute(user) {
+    groupsRoute(user) {
         return {
             getTitle() {
-                return <Text style={{color: 'white'}}>People</Text>;
+                return <Text style={{color: 'white'}}>Groups</Text>;
             },
             renderScene(navigator) {
-                return <People navigator={navigator} currentUser={User.getCurrentUser()}/>;
+                return <Groups navigator={navigator} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
@@ -174,13 +174,13 @@ const routes = {
         };
     },
   
-    showgrps(user) {
+    showusrs(group) {
         return {
             getTitle() {
-                return <Text style={{color: 'white'}}>{user.username}</Text>;
+                return <Text style={{color: 'white'}}>{group.name.toUpperCase()}</Text>;
             },
             renderScene(navigator) {
-                return <Showgrps navigator={navigator} user={user}/>;
+                return <Showusrs navigator={navigator} group={group} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight

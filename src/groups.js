@@ -1,29 +1,29 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, Spinner, List, ListItem, Text } from 'native-base';
+import { Container, Title, Content, Footer, FooterTab, Button, Icon, Spinner, List, ListItem, Text, Badge } from 'native-base';
 
 import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
 
-class People extends Component {
+class Groups extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadingUsr: true,
+            loadingGrps: true,
             error: false,
-            users: null
+            groups: null
         }
     }
   
     componentDidMount() {
-      this._getAllUsers();
+      this._getAllGroups();
     } 
   
-    _getAllUsers() {
-      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User', {
+    _getAllGroups() {
+      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/UserGroup', {
           method: 'GET',
           headers: {
               'Accept': 'application/json',
@@ -39,13 +39,13 @@ class People extends Component {
             if(resJson.length !== 0) {
               // Put they groups into var
               this.setState({
-                users: resJson,
-                loadingUsr: false,
+                groups: resJson,
+                loadingGrps: false,
               });
             } else {
               this.setState({
-                users: JSON.parse('[{"name" : "No users available"}]'),
-                loadingUsr: false,
+                groups: JSON.parse('[{"name" : "No users available"}]'),
+                loadingGrps: false,
               }); 
             }
           }  
@@ -56,19 +56,19 @@ class People extends Component {
     }
 
     render() {
-        var usersContent;
+        var grpsContent;
         
-        if(this.state.loadingUsr) {
-          var usersContent = (<Spinner />);
+        if(this.state.loadingGrps) {
+          var grpsContent = (<Spinner />);
         } else {
-          var usersContent = (
-            <List dataArray={this.state.users}
-              renderRow={(user) =>
-                  <ListItem iconRight onPress={() => {
-                    this.props.navigator.push(routes.showgrps(user))
+          var grpsContent = (
+            <List dataArray={this.state.groups}
+              renderRow={(group) =>
+                  <ListItem onPress={() => {
+                    this.props.navigator.push(routes.showusrs(group))
                   }}>
-                      <Text style={{color: '#bdc3c7'}}>{user.firstName} {user.lastName.toUpperCase()}</Text>
-                      <Icon name='ios-arrow-forward-outline' style={{color: '#bdc3c7'}}/>
+                      <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
+                      <Badge>{group.members.length}</Badge>
                   </ListItem>
               }>
             </List>
@@ -79,14 +79,14 @@ class People extends Component {
           <Container> 
             <Content style={{marginTop: 64}} theme={myThemeView}>
               <ListItem itemDivider>
-                  <Text>Availables users</Text>
+                  <Text>Availables groups</Text>
               </ListItem> 
-              {usersContent}
+              {grpsContent}
             </Content> 
             <Footer theme={myTheme}>
               <FooterTab>
                 <Button active>
-                  People
+                  Groups
                   <Icon name='ios-people'/>
                 </Button>
                 <Button onPress={() => {
@@ -109,4 +109,4 @@ class People extends Component {
     }
 }
 
-module.exports = People;
+module.exports = Groups;

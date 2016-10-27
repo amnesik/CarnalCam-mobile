@@ -63,7 +63,7 @@ class Setup extends Component {
           </View>)
       }
       
-      const route = this.state.connected ? routes.reRoutePeople() : routes.signinRoute();
+      const route = this.state.connected ? routes.reRouteGroups() : routes.signinRoute();
       
       return(
         <ExNavigator
