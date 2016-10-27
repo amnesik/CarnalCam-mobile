@@ -16,6 +16,7 @@ import Showcam from './showcam';
 
 import ExNavigator from '@exponent/react-native-navigator';
 
+var User = require('./Globals/User');
 
 const routes = {
     reRoutePeople() {
@@ -39,13 +40,13 @@ const routes = {
         };
     },
 
-    peopleRoute() {
+    peopleRoute(user) {
         return {
             getTitle() {
                 return <Text style={{color: 'white'}}>People</Text>;
             },
             renderScene(navigator) {
-                return <People navigator={navigator}/>;
+                return <People navigator={navigator} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
@@ -60,13 +61,13 @@ const routes = {
         };
     },
 
-    cameraRoute() {
+    cameraRoute(user) {
         return {
             getTitle() {
                 return <Text style={{color: 'white'}}>Camera</Text>;
             },
             renderScene(navigator) {
-                return <Camera navigator={navigator}/>;
+                return <Camera navigator={navigator} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
@@ -81,13 +82,13 @@ const routes = {
         };
     },
 
-    settingsRoute() {
+    settingsRoute(user) {
         return {
             getTitle() {
-                return <Text style={{color: 'white'}}>Settings</Text>;;
+                return <Text style={{color: 'white'}}>Settings</Text>;
             },
             renderScene(navigator) {
-                return <Settings navigator={navigator}/>;
+                return <Settings navigator={navigator} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
@@ -144,13 +145,13 @@ const routes = {
         };
     },
 
-    showcamRoute() {
+    showcamRoute(user) {
         return {
             getTitle() {
-                return 'Show Cam';
+                return <Text style={{color: 'white'}}>Show</Text>;
             },
             renderScene(navigator) {
-                return <Showcam navigator={navigator}/>;
+                return <Showcam navigator={navigator} user={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight

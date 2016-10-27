@@ -8,8 +8,6 @@ import routes from './routes';
 import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-settings';
 
-var User = require('./Globals/User');
-
 class Settings extends Component {
     constructor(props) {
         super(props);
@@ -20,17 +18,16 @@ class Settings extends Component {
             lastName: 'nc',
             loadingGrp: true,
             error: false,
-            jsonUser: User.getCurrentUser(),
             groups: null
         }
     }
   
     componentWillMount() {
       this.setState({
-        username: this.state.jsonUser.user.username,
-        email: this.state.jsonUser.user.email,
-        firstName: this.state.jsonUser.user.firstName,
-        lastName: this.state.jsonUser.user.lastName,
+        username: this.props.currentUser.user.username,
+        email: this.props.currentUser.user.email,
+        firstName: this.props.currentUser.user.firstName,
+        lastName: this.props.currentUser.user.lastName,
       });
       this._getUserGroups();
     }
@@ -41,12 +38,12 @@ class Settings extends Component {
   
     _getUserGroups() {
       if(this.state.username !== '' && this.state.password !== '') {
-        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.state.jsonUser.user.id, {
+        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.props.currentUser.user.id, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'JWT ' + this.state.jsonUser.token
+                'Authorization': 'JWT ' + this.props.currentUser.token
             }
         }).then( (res) => res.json())
           .then( (resJson) => {
