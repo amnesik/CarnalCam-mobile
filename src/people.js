@@ -6,7 +6,7 @@ import { Container, Title, Content, Footer, FooterTab, Button, Icon, Spinner, Li
 import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
-import myThemeView from './themes/theme-settings';
+import myThemeView from './themes/theme-people';
 
 class People extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class People extends Component {
         }
     }
   
-    componentWillMount() {
+    componentDidMount() {
       this._getAllUsers();
     } 
   
@@ -64,8 +64,11 @@ class People extends Component {
           var usersContent = (
             <List dataArray={this.state.users}
               renderRow={(user) =>
-                  <ListItem>
+                  <ListItem iconRight onPress={() => {
+                    this.props.navigator.push(routes.showgrps(user))
+                  }}>
                       <Text style={{color: '#bdc3c7'}}>{user.firstName} {user.lastName.toUpperCase()}</Text>
+                      <Icon name='ios-arrow-forward-outline' style={{color: '#bdc3c7'}}/>
                   </ListItem>
               }>
             </List>
