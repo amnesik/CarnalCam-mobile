@@ -14,6 +14,8 @@ import Setup from './setup';
 import Logout from './logout'
 import Showcam from './showcam';
 import Showusrs from './showusrs';
+import ShowGrpscam from './groups_cam';
+import ShowCamList from './showcams';
 
 import ExNavigator from '@exponent/react-native-navigator';
 
@@ -65,10 +67,10 @@ const routes = {
     cameraRoute(user) {
         return {
             getTitle() {
-                return <Text style={{color: 'white'}}>Camera</Text>;
+                return <Text style={{color: 'white'}}>Camera groups</Text>;
             },
             renderScene(navigator) {
-                return <Camera navigator={navigator} currentUser={User.getCurrentUser()}/>;
+                return <ShowGrpscam navigator={navigator} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
@@ -146,13 +148,41 @@ const routes = {
         };
     },
 
-    showcamRoute(user) {
+    showCamRoute(device) {
         return {
             getTitle() {
-                return <Text style={{color: 'white'}}>Show</Text>;
+                return <Text style={{color: 'white'}}>{device.name}</Text>;
             },
             renderScene(navigator) {
-                return <Showcam navigator={navigator} currentUser={User.getCurrentUser()}/>;
+                return <Showcam navigator={navigator} device={device} currentUser={User.getCurrentUser()}/>;
+            },
+            configureScene() {
+                return Navigator.SceneConfigs.PushFromRight
+            },
+            renderLeftButton(navigator) {
+                return (
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => navigator.pop() }>
+                        <Icon name='ios-arrow-back' style={{color: 'white'}}/>
+                    </Button>
+                );
+            },
+            renderRightButton(navigator) {
+                return (
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
+                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
+                    </Button>
+                );
+            },
+        };
+    },
+  
+    showCamListRoute(deviceGrp) {
+        return {
+            getTitle() {
+                return <Text style={{color: 'white'}}>{deviceGrp.name}</Text>;
+            },
+            renderScene(navigator) {
+                return <ShowCamList navigator={navigator} deviceGrp={deviceGrp} currentUser={User.getCurrentUser()}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight

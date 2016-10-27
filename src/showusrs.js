@@ -43,7 +43,7 @@ class Showusrs extends Component {
               });
             } else {
               this.setState({
-                users: JSON.parse('[{"name" : "No groups available"}]'),
+                users: JSON.parse('[{"username" : "No users available"}]'),
                 loadingUsrs: false,
               }); 
             }
