@@ -13,7 +13,8 @@ class Showcam extends Component {
     }
 
     render() {
-        if(this.props.currentUser.user.role){
+        var ws = new WebSocket('ws://'+window.SERVER_IP +':'+ window.SERVER_PORT+'/path/'+this.props.currentUser.user.id);
+        if(this.props.currentUser.user.role == "manager"){
             return (
                 <Container style={{'marginTop': 64}}>
                     <Content>
@@ -32,8 +33,8 @@ class Showcam extends Component {
                                 <Icon name='ios-arrow-dropleft' />
                             </Button>
                             <Button active>
-                                Photo
-                                <Icon name='ios-camera' />
+                                Off
+                                <Icon name='ios-power' />
                             </Button>
                             <Button onPress={() => {
                                 this.props.navigator.replace(routes.settingsRoute())

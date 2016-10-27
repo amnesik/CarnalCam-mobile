@@ -17,7 +17,6 @@ import Showcam from './showcam';
 import ExNavigator from '@exponent/react-native-navigator';
 
 var User = require('./Globals/User');
-
 const routes = {
     reRoutePeople() {
         return {
@@ -146,6 +145,7 @@ const routes = {
     },
 
     showcamRoute(user) {
+        var ws = new WebSocket('ws://'+window.SERVER_IP +':'+ window.SERVER_PORT+'/path/'+User.getCurrentUser().user.id);
         return {
             getTitle() {
                 return <Text style={{color: 'white'}}>Show</Text>;
@@ -158,7 +158,12 @@ const routes = {
             },
             renderLeftButton(navigator) {
                 return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => navigator.pop() }>
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => {navigator.pop();
+                        ws.onclose = (e) => {
+                            ws.send('User : '+this.props.currentUser.user.id+ ': quit camera :');
+                            console.log(e.code, e.reason);
+                        };
+                    }}>
                         <Icon name='ios-arrow-back' style={{color: 'white'}}/>
                     </Button>
                 );
