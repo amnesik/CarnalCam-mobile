@@ -14,7 +14,9 @@ class Showcam extends Component {
             error: false,
             device:  this.props.device,
             status: this.props.device.recording,
-            position:  this.props.device.position
+            position:  this.props.device.position,
+            leftIsActive: false,
+            rightIsActive: false,
         }
     }
   
@@ -47,7 +49,11 @@ class Showcam extends Component {
               </Content>
               <Footer theme={myTheme}>
                   <FooterTab>
-                      <Button active onPress={() => {this._changeDirection(-10)}}>
+                      <Button active={this.state.leftIsActive} onPress={() => {
+                        if(this.state.leftIsActive) {
+                          this._changeDirection(-10)
+                        }
+                      }}>
                           Left
                           <Icon name='ios-arrow-dropleft' />
                       </Button>
@@ -55,7 +61,11 @@ class Showcam extends Component {
                           {status}
                         <Icon name='ios-power' />
                       </Button>
-                      <Button active onPress={() => {this._changeDirection(10)}}>
+                      <Button active={this.state.rightIsActive} onPress={() => {
+                        if(this.state.rightIsActive) {
+                          this._changeDirection(10)
+                        }
+                      }}>
                           Right
                           <Icon name='ios-arrow-dropright' />
                       </Button>

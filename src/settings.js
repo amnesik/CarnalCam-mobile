@@ -33,10 +33,42 @@ class Settings extends Component {
     }
     
     _updateProfile() {
-      if(this.state.email !== '') {
+      if (this.state.email !== '') {
         this.setState({
           btnProfile: 'Waiting...'
         });
+        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.props.currentUser.user.id, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'JWT ' + this.props.currentUser.token
+          },
+          body: JSON.stringify({
+            email: this.state.email,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName
+          }),
+        }).then((res) => res.json())
+          .then((resJson) => {
+            console.log('----- RESPONSE -----');
+            console.log('-- PROFILE --');
+            console.log(resJson);
+            // Change all fields
+            this.setState({
+              btnProfile: 'Profile updated',
+              email: resJson.email,
+              firstName: resJson.firstName,
+              lastName: resJson.lastName
+            });
+            // Update currentUser informations
+            this.props.currentUser.user = resJson;
+            setTimeout(() => {
+              this.setState({
+                btnProfile: 'Update Profile'
+              })
+            }, 2000);
+          })
       }
     }
   
@@ -78,9 +110,7 @@ class Settings extends Component {
                       <Input value={this.state.lastName} onChangeText={(lastName) => this.setState({lastName})}/>
                   </InputGroup>
                 </ListItem>
-                <ListItem alignItems='center' justifyContent='center'>
-                   <Button block bordered onPress={() => {this._updateProfile()}}>{this.state.btnProfile}</Button>
-                </ListItem>
+                <Button style={{marginRight: 10, marginLeft: 10, marginTop: 10, marginBottom: 10}} block bordered small onPress={() => {this._updateProfile()}}>{this.state.btnProfile}</Button>
                 <ListItem itemDivider>
                     <Text>Password</Text>
                 </ListItem>
@@ -96,9 +126,7 @@ class Settings extends Component {
                       <Input placeholder='Confirmation password' secureTextEntry={true} onChangeText={(confirmPass) => this.setState({confirmPass})}/>
                   </InputGroup>
                 </ListItem>
-                <ListItem alignItems='center' justifyContent='center'>
-                   <Button block bordered onPress={() => {this._updatePassword()}}>{this.state.btnPass}</Button>
-                </ListItem>
+                <Button style={{marginRight: 10, marginLeft: 10, marginTop: 10, marginBottom: 10}} block bordered small onPress={() => {this._updatePassword()}}>{this.state.btnPass}</Button>
               </List> 
             </Content>
             

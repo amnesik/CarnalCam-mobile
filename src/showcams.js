@@ -14,7 +14,7 @@ class ShowCams extends Component {
         this.state = {
             loadingDevices: true,
             error: false,
-            devices: null
+            devices: JSON.parse('[{"name" : "No devices available"}]')
         }
     }
   
@@ -36,10 +36,10 @@ class ShowCams extends Component {
             console.log('------- RESPONSE -------');
             console.log('------- DEVICES -------');
             console.log(resJson);
-            if(resJson.members.length !== 0) {
+            if(resJson.devices.length !== 0) {
               // Put they groups into var
               this.setState({
-                devices: resJson.members,
+                devices: resJson.devices,
                 loadingDevices: false,
               });
             } else {
@@ -52,6 +52,10 @@ class ShowCams extends Component {
         })
         .catch( (error) => {
           console.log(error);
+          this.setState({
+            devices: JSON.parse('[{"name" : "No devices available"}]'),
+            loadingDevices: false,
+          });
         });
     }
 

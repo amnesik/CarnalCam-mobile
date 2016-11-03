@@ -14,7 +14,7 @@ class GroupsCam extends Component {
         this.state = {
             loadingGrps: true,
             error: false,
-            groups: null
+            groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
         }
     }
   
@@ -34,17 +34,20 @@ class GroupsCam extends Component {
         .then( (resJson) => {
           if(resJson !== null) {
             console.log('------- RESPONSE -------');
-            console.log('------- GROUPS -------');
+            console.log('------- CAM GROUPS -------');
             console.log(resJson);
             if(resJson.length !== 0) {
               // Put they groups into var
+              resJson.groups.map(function (key) {
+                key.membersCount = key.devices.length
+              });
               this.setState({
                 groups: resJson,
                 loadingGrps: false,
               });
             } else {
               this.setState({
-                groups: JSON.parse('[{"name" : "No camera groups available"}]'),
+                groups: JSON.parse('[{"name" : "No camera groups available", "membersCount" : "..."}]'),
                 loadingGrps: false,
               }); 
             }
@@ -52,6 +55,10 @@ class GroupsCam extends Component {
         })
         .catch( (error) => {
           console.log(error);
+          this.setState({
+            groups: JSON.parse('[{"name" : "No camera groups available", "membersCount" : "..."}]'),
+            loadingGrps: false,
+          });
         });
     }
 
@@ -68,7 +75,7 @@ class GroupsCam extends Component {
                     this.props.navigator.push(routes.showCamListRoute(groupCam))
                   }}>
                       <Text style={{color: '#bdc3c7'}}>{groupCam.name}</Text>
-                      <Badge>{groupCam.members.length}</Badge>
+                      <Badge>{groupCam.membersCount}</Badge>
                   </ListItem>
               }>
             </List>

@@ -9,51 +9,80 @@ import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
 
 class Groups extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loadingGrps: true,
-            error: false,
-            groups: null
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      loadingGrps: true,
+      error: false,
+      groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
     }
-  
-    componentDidMount() {
-      this._getAllGroups();
-    } 
-  
-    _getAllGroups() {
-      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/UserGroup', {
-          method: 'GET',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'JWT ' + this.props.currentUser.token
+  }
+
+  componentDidMount() {
+    this._getAllGroups();
+  }
+
+  _getAllGroups() {
+    fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.props.currentUser.user.id, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.props.currentUser.token
+      }
+    }).then((res) => res.json())
+      .then((resJson) => {
+        if (resJson !== null) {
+          console.log('------- RESPONSE -------');
+          console.log('------- GROUPS NEXT -------');
+          if (resJson.groups.length !== 0) {
+            // Put they groups into var
+            this.setState({
+              groups: resJson.groups
+              ,
+              loadingGrps: false,
+            });
+            // Set membersCount
+            resJson.groups.map(function (key) {
+              // Fetch userGroup
+              fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/UserGroup/' + key.id, {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': 'JWT ' + this.props.currentUser.token
+                }
+              }).then((res) => res.json())
+                .then((resJson1) => {
+                  if (resJson !== null) {
+                    console.log('----- RESPONSE ------');
+                    console.log('----- USER GROUP ------');
+                    console.log(resJson1);
+                    console.log(resJson1.members.length);
+                    key.membersCount = resJson1.members.length;
+                    //
+                    this.setState({
+                      groups: resJson.groups
+                    })
+                  }
+                });
+            }, this);
+          } else {
+            this.setState({
+              groups: JSON.parse('[{"name" : "No groups available", "membersCount" : "..."}]'),
+              loadingGrps: false,
+            });
           }
-      }).then( (res) => res.json())
-        .then( (resJson) => {
-          if(resJson !== null) {
-            console.log('------- RESPONSE -------');
-            console.log('------- GROUPS -------');
-            console.log(resJson);
-            if(resJson.length !== 0) {
-              // Put they groups into var
-              this.setState({
-                groups: resJson,
-                loadingGrps: false,
-              });
-            } else {
-              this.setState({
-                groups: JSON.parse('[{"name" : "No groups available"}]'),
-                loadingGrps: false,
-              }); 
-            }
-          }  
-        })
-        .catch( (error) => {
-          console.log(error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          groups: JSON.parse('[{"name" : "No groups available", "membersCount" : "..."}]'),
+          loadingGrps: false,
         });
-    }
+      });
+    };
 
     render() {
         var grpsContent;
@@ -67,8 +96,8 @@ class Groups extends Component {
                   <ListItem onPress={() => {
                     this.props.navigator.push(routes.showusrs(group))
                   }}>
-                      <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
-                      <Badge>{group.members.length}</Badge>
+                    <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
+                    <Badge>{group.membersCount}</Badge>
                   </ListItem>
               }>
             </List>
