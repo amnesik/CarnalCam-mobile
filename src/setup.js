@@ -10,8 +10,8 @@ import routes from './routes';
 
 var User = require('./Globals/User');
 
-//window.SERVER_IP = '178.62.14.241';
-window.SERVER_IP = 'localhost';
+window.SERVER_IP = '178.62.14.241';
+//window.SERVER_IP = 'localhost';
 window.SERVER_PORT = '1337';
 
 class Setup extends Component {
