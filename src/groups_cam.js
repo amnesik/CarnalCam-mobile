@@ -7,11 +7,8 @@ import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
-var socketIOClient = require('socket.io-client');
-var sailsIOClient = require('sails.io.js');
-var io = sailsIOClient(socketIOClient);
-io.sails.url = 'http://localhost:1337';
-class Groups extends Component {
+
+class GroupsCam extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,35 +16,14 @@ class Groups extends Component {
             error: false,
             groups: null
         }
-
-
-        io.socket.get('/user', function serverResponded (data,JWR) {
-            // body === JWR.body
-            console.log('Sails responded with: ', data);
-            console.log('with headers: ', JWR.headers);
-            console.log('and with status code: ', JWR.statusCode);
-
-            // When you are finished with `io.socket`, or any other sockets you connect manually,
-            // you should make sure and disconnect them, e.g.:
-            io.socket.disconnect();
-
-            // (note that there is no callback argument to the `.disconnect` method)
-        });
-
-
-        io.socket.on('connection', function (data) {
-            console.log('dfdkfhdfkdhf');
-            console.log('********************* yayayaya *********************');
-        })
-
     }
   
     componentDidMount() {
-      this._getAllGroups();
+      this._getAllDeviceGroup();
     } 
   
-    _getAllGroups() {
-      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/UserGroup', {
+    _getAllDeviceGroup() {
+      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/DeviceGroup', {
           method: 'GET',
           headers: {
               'Accept': 'application/json',
@@ -68,7 +44,7 @@ class Groups extends Component {
               });
             } else {
               this.setState({
-                groups: JSON.parse('[{"name" : "No groups available"}]'),
+                groups: JSON.parse('[{"name" : "No camera groups available"}]'),
                 loadingGrps: false,
               }); 
             }
@@ -87,12 +63,12 @@ class Groups extends Component {
         } else {
           var grpsContent = (
             <List dataArray={this.state.groups}
-              renderRow={(group) =>
+              renderRow={(groupCam) =>
                   <ListItem onPress={() => {
-                    this.props.navigator.push(routes.showusrs(group))
+                    this.props.navigator.push(routes.showCamListRoute(groupCam))
                   }}>
-                      <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
-                      <Badge>{group.members.length}</Badge>
+                      <Text style={{color: '#bdc3c7'}}>{groupCam.name}</Text>
+                      <Badge>{groupCam.members.length}</Badge>
                   </ListItem>
               }>
             </List>
@@ -103,19 +79,19 @@ class Groups extends Component {
           <Container> 
             <Content style={{marginTop: 64}} theme={myThemeView}>
               <ListItem itemDivider>
-                  <Text>Availables groups</Text>
+                  <Text>Availables camera groups</Text>
               </ListItem> 
               {grpsContent}
             </Content> 
             <Footer theme={myTheme}>
               <FooterTab>
-                <Button active>
+                <Button onPress={() => {
+                        this.props.navigator.replace(routes.groupsRoute())
+                      }}>
                   Groups
                   <Icon name='ios-people'/>
                 </Button>
-                <Button onPress={() => {
-                        this.props.navigator.replace(routes.cameraRoute())
-                      }}>
+                <Button active>
                   Camera
                   <Icon name='ios-camera' />
                 </Button>  
@@ -133,4 +109,4 @@ class Groups extends Component {
     }
 }
 
-module.exports = Groups;
+module.exports = GroupsCam;

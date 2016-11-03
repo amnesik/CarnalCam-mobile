@@ -17,11 +17,13 @@ class Settings extends Component {
             firstName: 'nc',
             lastName: 'nc',
             pass: null,
-            confirmPass: null
+            confirmPass: null,
+            btnPass: 'Update Password',
+            btnProfile: 'Update Profile'
         }
     }
   
-    componentWillMount() {
+    componentDidMount() {
       this.setState({
         username: this.props.currentUser.user.username,
         email: this.props.currentUser.user.email,
@@ -30,12 +32,18 @@ class Settings extends Component {
       });
     }
     
-    _updateProfil() {
-      
+    _updateProfile() {
+      if(this.state.email !== '') {
+        this.setState({
+          btnProfile: 'Waiting...'
+        });
+      }
     }
   
     _updatePassword() {
-      
+      this.setState({
+        btnPass: 'Waiting...'
+      });
     }
 
     render() {     
@@ -71,7 +79,7 @@ class Settings extends Component {
                   </InputGroup>
                 </ListItem>
                 <ListItem alignItems='center' justifyContent='center'>
-                   <Button block bordered> Update profil </Button>
+                   <Button block bordered onPress={() => {this._updateProfile()}}>{this.state.btnProfile}</Button>
                 </ListItem>
                 <ListItem itemDivider>
                     <Text>Password</Text>
@@ -89,7 +97,7 @@ class Settings extends Component {
                   </InputGroup>
                 </ListItem>
                 <ListItem alignItems='center' justifyContent='center'>
-                   <Button block bordered> Update password </Button>
+                   <Button block bordered onPress={() => {this._updatePassword()}}>{this.state.btnPass}</Button>
                 </ListItem>
               </List> 
             </Content>

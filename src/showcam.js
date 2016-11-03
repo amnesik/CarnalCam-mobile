@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, List, ListItem, Thumbnail, Text } from 'native-base';
+import { Container, Title, Content, Footer, FooterTab, Button, Icon, List, ListItem, Thumbnail, Text, Grid, Row } from 'native-base';
 import { WebView } from 'react-native';
 
 import routes from './routes';
@@ -10,82 +10,59 @@ import myTheme from './themes/theme-footer';
 class Showcam extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            error: false,
+            device:  this.props.device,
+            status: this.props.device.recording,
+            position:  this.props.device.position
+        }
     }
-
-    _turnLeft(){
-        fetch('http://127.0.0.1:8888/turn_left', {
-            method: 'GET'
-        }).then( (res) => res.json())
-            .then( (resJson) => {
-                console.log(resJson);
-            })
-            .catch( (error) => {
-                console.log(error);
-            });
+  
+    _changeDirection(rate) {
+      console.log(rate);
+      if((rate === 10 && this.state.position !== 180) || (rate === -10 && this.state.position !== 0)) {
+        this.setState({
+          position: parseInt(this.state.position) + parseInt(rate)
+        })
+      }
     }
-
-    _turnRight(){
-        fetch('http://127.0.0.1:8888/turn_right', {
-            method: 'GET'
-        }).then( (res) => res.json())
-            .then( (resJson) => {
-                console.log(resJson);
-            })
-            .catch( (error) => {
-                console.log(error);
-            });
-    }
-
+  
     render() {
-        //var ws = new WebSocket('ws://'+window.SERVER_IP +':'+ window.SERVER_PORT+'/path/'+this.props.currentUser.user.id);
-        //if(this.props.currentUser.user.role == "manager"){
-            return (
-                <Container style={{'marginTop': 64}}>
-                    <Content>
-                        <WebView
-                            source={{uri: 'https://github.com/facebook/react-native'}}
-                            style={{width: 375, height:600}}
-                        />
-                    </Content>
-
-                    <Footer theme={myTheme}>
-                        <FooterTab>
-                            <Button onPress={() => {
-                                this._turnLeft()
-                            }}>
-                                Left
-                                <Icon name='ios-arrow-dropleft' />
-                            </Button>
-                            <Button active>
-                                Off
-                                <Icon name='ios-power' />
-                            </Button>
-                            <Button onPress={() => {
-                                this._turnRight()
-                            }}>
-                                Right
-                                <Icon name='ios-arrow-dropright' />
-                            </Button>
-                        </FooterTab>
-                    </Footer>
-                </Container>
-            );
-       /* }else {
-            return (
-                <Container style={{'marginTop': 64}}>
-                    <Content>
-                        <WebView
-                            source={{uri: 'https://github.com/facebook/react-native'}}
-                            style={{width: 375, height:600}}
-                        />
-                    </Content>
-
-                    <Footer theme={myTheme}>
-
-                    </Footer>
-                </Container>
-            );
-        }*/
+        if(this.state.status){
+          var status = 'Off'
+        } else {
+          var status = 'On'
+        }
+        return (
+            <Container>
+              <Content style={{'marginTop': 64, marginBottom: -64}}>
+                <Grid>
+                  <Row alignItems='center' justifyContent='center'>
+                    <Text style={{color: 'black'}}>{this.state.device.name}</Text>
+                  </Row>
+                  <Row alignItems='center' justifyContent='center'>
+                    <Text>{this.state.position} °</Text>
+                  </Row>
+                </Grid>
+              </Content>
+              <Footer theme={myTheme}>
+                  <FooterTab>
+                      <Button active onPress={() => {this._changeDirection(-10)}}>
+                          Left
+                          <Icon name='ios-arrow-dropleft' />
+                      </Button>
+                      <Button active>
+                          {status}
+                        <Icon name='ios-power' />
+                      </Button>
+                      <Button active onPress={() => {this._changeDirection(10)}}>
+                          Right
+                          <Icon name='ios-arrow-dropright' />
+                      </Button>
+                  </FooterTab>
+              </Footer>
+            </Container>
+        );
     }
 }
 
