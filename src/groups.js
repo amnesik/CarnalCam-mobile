@@ -19,8 +19,9 @@ class Groups extends Component {
             error: false,
             groups: null
         }
-
-
+        io.sails.headers = {
+            "'Authorization'": 'JWT ' + this.props.currentUser.token
+        };
         io.socket.get('/user', function serverResponded (data,JWR) {
             // body === JWR.body
             console.log('Sails responded with: ', data);
