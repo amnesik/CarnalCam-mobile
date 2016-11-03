@@ -38,7 +38,7 @@ class GroupsCam extends Component {
             console.log(resJson);
             if(resJson.length !== 0) {
               // Put they groups into var
-              resJson.groups.map(function (key) {
+              resJson.map(function (key) {
                 key.membersCount = key.devices.length
               });
               this.setState({

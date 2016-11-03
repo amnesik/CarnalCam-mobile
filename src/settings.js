@@ -73,9 +73,53 @@ class Settings extends Component {
     }
   
     _updatePassword() {
-      this.setState({
-        btnPass: 'Waiting...'
-      });
+      console.log(this.state.pass)
+      if ((this.state.pass === this.state.confirmPass) && this.state.pass !== null && this.state.pass !== '' && typeof this.state.pass !== 'undefined') {
+        this.setState({
+          btnPass: 'Waiting...'
+        });
+        fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.props.currentUser.user.id, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'JWT ' + this.props.currentUser.token
+          },
+          body: JSON.stringify({
+            password: this.state.pass
+          }),
+        }).then((res) => res.json())
+          .then((resJson) => {
+            console.log('----- RESPONSE -----');
+            console.log('-- PASSWORD --');
+            console.log(resJson);
+            // Change all fields
+            this.setState({
+              btnPass: 'Password updated',
+              pass: null,
+              confirmPass: null
+            });
+            // Update currentUser informations
+            this.props.currentUser.user = resJson;
+            setTimeout(() => {
+              this.setState({
+                btnPass: 'Update Password'
+              })
+            }, 2000);
+          })
+      } else {
+        this.setState({
+          btnPass: 'Wrong password',
+          password: '',
+          passwordConfirm: ''
+        });
+        // Update btnPass informations
+        setTimeout(() => {
+          this.setState({
+            btnPass: 'Update Password'
+          })
+        }, 2000);
+      }
     }
 
     render() {     

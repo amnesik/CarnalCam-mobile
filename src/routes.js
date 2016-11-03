@@ -21,6 +21,7 @@ import ExNavigator from '@exponent/react-native-navigator';
 
 var User = require('./Globals/User');
 var Socket = require('./Globals/socketService');
+
 const routes = {
     reRouteGroups() {
         return {
