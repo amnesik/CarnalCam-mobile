@@ -7,15 +7,36 @@ import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
-
+var socketIOClient = require('socket.io-client');
+var sailsIOClient = require('sails.io.js');
+var io = sailsIOClient(socketIOClient);
+io.sails.url = 'http://localhost:1337';
 class Groups extends Component {
   constructor(props) {
-    super(props);
-    this.state = {
-      loadingGrps: true,
-      error: false,
-      groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
-    }
+      super(props);
+      this.state = {
+          loadingGrps: true,
+          error: false,
+          groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
+      }
+
+      io.socket.get('/user', function serverResponded (data,JWR) {
+          // body === JWR.body
+          console.log('Sails responded with: ', data);
+          console.log('with headers: ', JWR.headers);
+          console.log('and with status code: ', JWR.statusCode);
+
+          // When you are finished with `io.socket`, or any other sockets you connect manually,
+          // you should make sure and disconnect them, e.g.:
+          io.socket.disconnect();
+
+          // (note that there is no callback argument to the `.disconnect` method)
+      });
+
+
+      io.socket.on('connection', function (data) {
+          console.log('********************* Connected *********************');
+      })
   }
 
   componentDidMount() {

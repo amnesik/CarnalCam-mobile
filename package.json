@@ -12,7 +12,9 @@
     "react": "15.3.2",
     "react-native": "0.35.0",
     "react-native-loading-spinner-overlay": "^0.3.0",
-    "react-native-orientation": "^1.17.0"
+    "react-native-orientation": "^1.17.0",
+    "sails.io.js": "^0.14.0",
+    "socket.io-client": "^1.5.1"
   },
   "jest": {
     "preset": "jest-react-native"
