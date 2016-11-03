@@ -27,7 +27,7 @@ class ForgotPass extends Component {
     }
   
     _forgotPassword() {
-      if(this.state.email !== null || this.state.email.length !== 0 || this._checkMailAddress(this.state.email)) {
+      if(this.state.email !== null && this.state.email.length !== 0 && this._checkMailAddress(this.state.email)) {
         fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/auth/forgot', {
             method: 'POST',
             headers: {
@@ -37,18 +37,18 @@ class ForgotPass extends Component {
             body: JSON.stringify({
                 email: this.state.email,
             })
-        }).then( (res) => {
-          console.log(res.status);
-          if(res.status !== 200) {
-            throw new Error(res.json());
+        }).then( (res) => res.json())
+          .then ( (resJson) => {
+          console.log(resJson);
+          if(typeof resJson.error !== 'undefined') {
+            // Check return
+            this.setState({
+              error : true,
+              errorMessage : resJson.error
+            })
+          } else {
+            this._showPopUp();
           }
-          this._showPopUp();
-        }).catch ( (resJson) => {
-          // Check return
-          this.setState({
-            error : true,
-            errorMessage : resJson.message
-          })
         })
       } else {
         this.setState({

@@ -53,13 +53,6 @@ const routes = {
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
             },
-            renderRightButton(navigator) {
-                return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
-                    </Button>
-                );
-            },
         };
     },
 
@@ -73,13 +66,6 @@ const routes = {
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
-            },
-            renderRightButton(navigator) {
-                return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
-                    </Button>
-                );
             },
         };
     },
@@ -165,13 +151,6 @@ const routes = {
                     </Button>
                 );
             },
-            renderRightButton(navigator) {
-                return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
-                    </Button>
-                );
-            },
         };
     },
   
@@ -188,20 +167,8 @@ const routes = {
             },
             renderLeftButton(navigator) {
                 return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => {navigator.pop();
-                        ws.onclose = (e) => {
-                            ws.send('User : '+this.props.currentUser.user.id+ ': quit camera :');
-                            console.log(e.code, e.reason);
-                        };
-                    }}>
+                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => {navigator.pop();}}>
                         <Icon name='ios-arrow-back' style={{color: 'white'}}/>
-                    </Button>
-                );
-            },
-            renderRightButton(navigator) {
-                return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
                     </Button>
                 );
             },
@@ -223,13 +190,6 @@ const routes = {
                 return (
                     <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => navigator.pop() }>
                         <Icon name='ios-arrow-back' style={{color: 'white'}}/>
-                    </Button>
-                );
-            },
-            renderRightButton(navigator) {
-                return (
-                    <Button transparent style={{marginRight: 10, marginTop: 5}} onPress={() => { Logout.logOut(navigator); }}>
-                        <Icon name='ios-log-out-outline' style={{color: 'white'}}/>
                     </Button>
                 );
             },

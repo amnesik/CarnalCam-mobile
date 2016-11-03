@@ -12,73 +12,101 @@ var sailsIOClient = require('sails.io.js');
 var io = sailsIOClient(socketIOClient);
 io.sails.url = 'http://localhost:1337';
 class Groups extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loadingGrps: true,
-            error: false,
-            groups: null
-        }
-        io.sails.headers = {
-            "'Authorization'": 'JWT ' + this.props.currentUser.token
-        };
-        io.socket.get('/user', function serverResponded (data,JWR) {
-            // body === JWR.body
-            console.log('Sails responded with: ', data);
-            console.log('with headers: ', JWR.headers);
-            console.log('and with status code: ', JWR.statusCode);
+  constructor(props) {
+      super(props);
+      this.state = {
+          loadingGrps: true,
+          error: false,
+          groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
+      }
+      io.sails.headers = {
+          "'Authorization'": 'JWT ' + this.props.currentUser.token
+      };
 
-            // When you are finished with `io.socket`, or any other sockets you connect manually,
-            // you should make sure and disconnect them, e.g.:
-            io.socket.disconnect();
+      io.socket.get('/user', function serverResponded (data,JWR) {
+          // body === JWR.body
+          console.log('Sails responded with: ', data);
+          console.log('with headers: ', JWR.headers);
+          console.log('and with status code: ', JWR.statusCode);
 
-            // (note that there is no callback argument to the `.disconnect` method)
-        });
+          // When you are finished with `io.socket`, or any other sockets you connect manually,
+          // you should make sure and disconnect them, e.g.:
+          io.socket.disconnect();
+
+          // (note that there is no callback argument to the `.disconnect` method)
+      });
 
 
-        io.socket.on('connection', function (data) {
-            console.log('dfdkfhdfkdhf');
-            console.log('********************* yayayaya *********************');
-        })
+      io.socket.on('connection', function (data) {
+          console.log('********************* Connected *********************');
+      })
+  }
 
-    }
-  
-    componentDidMount() {
-      this._getAllGroups();
-    } 
-  
-    _getAllGroups() {
-      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/UserGroup', {
-          method: 'GET',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'JWT ' + this.props.currentUser.token
+  componentDidMount() {
+    this._getAllGroups();
+  }
+
+  _getAllGroups() {
+    fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/User/' + this.props.currentUser.user.id, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ' + this.props.currentUser.token
+      }
+    }).then((res) => res.json())
+      .then((resJson) => {
+        if (resJson !== null) {
+          console.log('------- RESPONSE -------');
+          console.log('------- GROUPS NEXT -------');
+          if (resJson.groups.length !== 0) {
+            // Put they groups into var
+            this.setState({
+              groups: resJson.groups
+              ,
+              loadingGrps: false,
+            });
+            // Set membersCount
+            resJson.groups.map(function (key) {
+              // Fetch userGroup
+              fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/UserGroup/' + key.id, {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': 'JWT ' + this.props.currentUser.token
+                }
+              }).then((res) => res.json())
+                .then((resJson1) => {
+                  if (resJson !== null) {
+                    console.log('----- RESPONSE ------');
+                    console.log('----- USER GROUP ------');
+                    console.log(resJson1);
+                    console.log(resJson1.members.length);
+                    key.membersCount = resJson1.members.length;
+                    //
+                    this.setState({
+                      groups: resJson.groups
+                    })
+                  }
+                });
+            }, this);
+          } else {
+            this.setState({
+              groups: JSON.parse('[{"name" : "No groups available", "membersCount" : "..."}]'),
+              loadingGrps: false,
+            });
           }
-      }).then( (res) => res.json())
-        .then( (resJson) => {
-          if(resJson !== null) {
-            console.log('------- RESPONSE -------');
-            console.log('------- GROUPS -------');
-            console.log(resJson);
-            if(resJson.length !== 0) {
-              // Put they groups into var
-              this.setState({
-                groups: resJson,
-                loadingGrps: false,
-              });
-            } else {
-              this.setState({
-                groups: JSON.parse('[{"name" : "No groups available"}]'),
-                loadingGrps: false,
-              }); 
-            }
-          }  
-        })
-        .catch( (error) => {
-          console.log(error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          groups: JSON.parse('[{"name" : "No groups available", "membersCount" : "..."}]'),
+          loadingGrps: false,
         });
-    }
+      });
+    };
 
     render() {
         var grpsContent;
@@ -92,8 +120,8 @@ class Groups extends Component {
                   <ListItem onPress={() => {
                     this.props.navigator.push(routes.showusrs(group))
                   }}>
-                      <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
-                      <Badge>{group.members.length}</Badge>
+                    <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
+                    <Badge>{group.membersCount}</Badge>
                   </ListItem>
               }>
             </List>
