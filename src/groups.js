@@ -7,21 +7,23 @@ import routes from './routes';
 import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
-var socketIOClient = require('socket.io-client');
-var sailsIOClient = require('sails.io.js');
-var io = sailsIOClient(socketIOClient);
-io.sails.url = 'http://localhost:1337';
+
+
+var io = {
+    socket: null
+}
+
 class Groups extends Component {
   constructor(props) {
       super(props);
+      io.socket = this.props.socket;
+
       this.state = {
           loadingGrps: true,
           error: false,
           groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
-      }
-      io.sails.headers = {
-          "'Authorization'": 'JWT ' + this.props.currentUser.token
       };
+
 
       io.socket.get('/user', function serverResponded (data,JWR) {
           // body === JWR.body
@@ -35,11 +37,6 @@ class Groups extends Component {
 
           // (note that there is no callback argument to the `.disconnect` method)
       });
-
-
-      io.socket.on('connection', function (data) {
-          console.log('********************* Connected *********************');
-      })
   }
 
   componentDidMount() {

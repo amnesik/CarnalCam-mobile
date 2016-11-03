@@ -20,6 +20,7 @@ import ShowCamList from './showcams';
 import ExNavigator from '@exponent/react-native-navigator';
 
 var User = require('./Globals/User');
+var Socket = require('./Globals/socketService');
 const routes = {
     reRouteGroups() {
         return {
@@ -48,7 +49,7 @@ const routes = {
                 return <Text style={{color: 'white'}}>Groups</Text>;
             },
             renderScene(navigator) {
-                return <Groups navigator={navigator} currentUser={User.getCurrentUser()}/>;
+                return <Groups navigator={navigator} currentUser={User.getCurrentUser()} socket={Socket.getSocket(User.getCurrentUser().token)}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight

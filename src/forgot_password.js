@@ -39,7 +39,6 @@ class ForgotPass extends Component {
             })
         }).then( (res) => res.json())
           .then ( (resJson) => {
-          console.log(resJson);
           if(typeof resJson.error !== 'undefined') {
             // Check return
             this.setState({
