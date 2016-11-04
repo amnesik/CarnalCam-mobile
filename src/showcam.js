@@ -1,49 +1,135 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, List, ListItem, Thumbnail, Text, Grid, Row } from 'native-base';
-import { WebView } from 'react-native';
-
-import routes from './routes';
+import { Container, Content, Footer, FooterTab, Button, Icon, Text, Row, Grid} from 'native-base';
+import { Dimensions } from 'react-native';
 import myTheme from './themes/theme-footer';
+
+var io = {
+  socket: null
+};
 
 class Showcam extends Component {
     constructor(props) {
         super(props);
+        io.socket = this.props.socket;
         this.state = {
-            error: false,
-            device:  this.props.device,
-            status: this.props.device.recording,
-            position:  this.props.device.position,
-            leftIsActive: false,
-            rightIsActive: false,
+          error: false,
+          device: this.props.device,
+          position: this.props.device.position,
+          recording: false,
+          statusText: 'On',
+          leftIsActive: false,
+          rightIsActive: false,
         }
     }
-  
+
+    _fetchPosition(position){
+      fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/Device/' + this.props.device.id, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'JWT ' + this.props.currentUser.token
+        },
+        body: JSON.stringify({
+          position: position
+        })
+      })
+    }
+
     _changeDirection(rate) {
-      console.log(rate);
       if((rate === 10 && this.state.position !== 180) || (rate === -10 && this.state.position !== 0)) {
+        if(this.state.position === 170){
+          this._fetchPosition(parseInt(this.state.position) + parseInt(rate));
+          this.setState({
+            rightIsActive: false
+          })
+        } else if(this.state.position === 10){
+          this._fetchPosition(parseInt(this.state.position) + parseInt(rate));
+          this.setState({
+            leftIsActive: false
+          })
+        } else {
+          this._fetchPosition(parseInt(this.state.position) + parseInt(rate));
+          this.setState({
+            leftIsActive: true,
+            rightIsActive: true
+          })
+        }
+      }
+    }
+
+    _connectBtn() {
+      // Recording
+      if(!this.state.recording){
+        this._socketConnect();
+        if(this.state.position > 0 && this.state.position < 180 && !this.state.recording){
+          this.setState({
+            leftIsActive: true,
+            rightIsActive: true,
+            recording: true,
+            statusText: 'Off'
+          })
+        } else if(this.state.position === 0){
+          this.setState({
+            rightIsActive: true,
+            recording: true,
+            statusText: 'Off'
+          })
+        } else {
+          this.setState({
+            leftIsActive: true,
+            recording: true,
+            statusText: 'Off'
+          })
+        }
+      } else {
+        this._socketDisconnect();
         this.setState({
-          position: parseInt(this.state.position) + parseInt(rate)
+          leftIsActive: false,
+          rightIsActive: false,
+          recording: false,
+          statusText: 'On'
         })
       }
     }
-  
+
+    _socketConnect() {
+      console.log('#### CONNECT ####')
+      io.socket.get('/device/' + this.props.device.id, (data,JWR) => {
+        console.log('DATA: ', data);
+        console.log('HEADERS: ', JWR.headers);
+        console.log('STATUS CODE: ', JWR.statusCode);
+      });
+      io.socket.on('device', (msg) => {
+        console.log('### MESSAGE SOCKET #####');
+        console.log(msg)
+        this.setState({
+          position: msg.data.position
+        })
+      })
+    }
+
+    _socketDisconnect() {
+      console.log('#### DISCONNECT ####');
+      io.socket.delete('/device/' + this.props.device.id, (data,JWR) => {
+        console.log('DATA: ', data);
+        console.log('HEADERS: ', JWR.headers);
+        console.log('STATUS CODE: ', JWR.statusCode);
+      });
+      this.setState({
+        recording: false
+      })
+    }
+
     render() {
-        if(this.state.status){
-          var status = 'Off'
-        } else {
-          var status = 'On'
-        }
         return (
             <Container>
               <Content style={{'marginTop': 64, marginBottom: -64}}>
                 <Grid>
-                  <Row alignItems='center' justifyContent='center'>
-                    <Text style={{color: 'black'}}>{this.state.device.name}</Text>
-                  </Row>
-                  <Row alignItems='center' justifyContent='center'>
-                    <Text>{this.state.position} °</Text>
+                  <Row alignItems='center' justifyContent='center' style={{height: 100, backgroundColor: '#7f8c8d'}}>
+                    <Text style={{color: 'white'}}>{this.state.position} °</Text>
                   </Row>
                 </Grid>
               </Content>
@@ -57,8 +143,10 @@ class Showcam extends Component {
                           Left
                           <Icon name='ios-arrow-dropleft' />
                       </Button>
-                      <Button active>
-                          {status}
+                      <Button active onPress={() => {
+                        this._connectBtn()
+                      }}>
+                          {this.state.statusText}
                         <Icon name='ios-power' />
                       </Button>
                       <Button active={this.state.rightIsActive} onPress={() => {

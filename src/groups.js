@@ -1,41 +1,20 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, Spinner, List, ListItem, Text, Badge } from 'native-base';
+import { Container, Content, Footer, FooterTab, Button, Icon, Spinner, List, ListItem, Text, Badge } from 'native-base';
 
 import routes from './routes';
-import ExNavigator from '@exponent/react-native-navigator';
 import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
-
-
-var io = {
-    socket: null
-};
 
 class Groups extends Component {
   constructor(props) {
       super(props);
-      io.socket = this.props.socket;
-
       this.state = {
           loadingGrps: true,
           error: false,
           groups: JSON.parse('[{"name" : "Waiting...", "membersCount" : "..."}]')
       };
-
-
-      io.socket.get('/device', function serverResponded (data,JWR) {
-          // body === JWR.body
-          console.log('Sails responded with: ', data);
-          console.log('with headers: ', JWR.headers);
-          console.log('and with status code: ', JWR.statusCode);
-
-          // When you are finished with `io.socket`, or any other sockets you connect manually,
-          // you should make sure and disconnect them, e.g.:
-
-          // (note that there is no callback argument to the `.disconnect` method)
-      });
   }
 
   componentDidMount() {
@@ -114,7 +93,9 @@ class Groups extends Component {
             <List dataArray={this.state.groups}
               renderRow={(group) =>
                   <ListItem onPress={() => {
-                    this.props.navigator.push(routes.showusrs(group))
+                    if(group.membersCount !== 0 && group.membersCount !== '...'){
+                      this.props.navigator.push(routes.showusrs(group))
+                    }
                   }}>
                     <Text style={{color: '#bdc3c7'}}>{group.name}</Text>
                     <Badge>{group.membersCount}</Badge>
