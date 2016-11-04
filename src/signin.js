@@ -102,7 +102,7 @@ class Signin extends Component {
                   <Col size={80}>     
                     <InputGroup> 
                       <Icon name='ios-person' style={{color: 'white'}}/>
-                      <Input placeholder='Username' autoCapitalize='none' onChangeText={(username) => this.setState({username})}/>
+                      <Input placeholder='Username' autoCapitalize='none' autoCorrect={false} autoFocus={true}  onChangeText={(username) => this.setState({username})}/>
                     </InputGroup>
                     <InputGroup>
                       <Icon name='ios-unlock' style={{color: 'white'}}/>

@@ -94,7 +94,7 @@ class ForgotPass extends Component {
                   <Col size={80}>     
                     <InputGroup> 
                       <Icon name='ios-at-outline' style={{color: 'white'}}/>
-                      <Input placeholder='Email' autoCapitalize='none' onChangeText={(email) => this.setState({email})}/>
+                      <Input placeholder='Email' autoCapitalize='none' keyboardType="email-address" onChangeText={(email) => this.setState({email})}/>
                     </InputGroup>
                     <Button block bordered style={{marginTop: 25}} onPress={() => this._forgotPassword()}>{this.state.submit}</Button>
                     <Button block transparent small style={{marginTop : 15}} onPress={() => {this.props.navigator.pop()}}> Return to Sign In  </Button>

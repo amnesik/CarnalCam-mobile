@@ -39,7 +39,11 @@ class GroupsCam extends Component {
             if(resJson.length !== 0) {
               // Put they groups into var
               resJson.map(function (key) {
-                key.membersCount = key.devices.length
+                if(typeof key.devices !== 'undefined') {
+                  key.membersCount = key.devices.length
+                } else {
+                  key.membersCount = 0
+                }
               });
               this.setState({
                 groups: resJson,

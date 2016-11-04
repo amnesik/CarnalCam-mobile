@@ -5,12 +5,10 @@ import { Navigator, Text } from 'react-native';
 
 import React from 'react';
 import Groups from './groups';
-import Camera from './camera';
 import Settings from './settings';
 import Signin from './signin';
 import Register from './signup';
 import ForgotPass from './forgot_password';
-import Setup from './setup';
 import Logout from './logout'
 import Showcam from './showcam';
 import Showusrs from './showusrs';

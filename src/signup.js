@@ -116,15 +116,15 @@ class Register extends Component {
                     </InputGroup>
                     <InputGroup> 
                       <Icon name='ios-at-outline' style={{color: 'white'}}/>
-                      <Input placeholder='Email' autoCapitalize='none' onChangeText={(email) => this.setState({email})}/>
+                      <Input placeholder='Email' autoCapitalize='none' keyboardType="email-address" onChangeText={(email) => this.setState({email})}/>
                     </InputGroup>
                     <InputGroup> 
                       <Icon name='ios-contact-outline' style={{color: 'white'}}/>
-                      <Input placeholder='First Name' autoCapitalize='none' onChangeText={(firstName) => this.setState({firstName})}/>
+                      <Input placeholder='First Name' autoCapitalize='words' onChangeText={(firstName) => this.setState({firstName})}/>
                     </InputGroup>
                     <InputGroup> 
                       <Icon name='ios-contact-outline' style={{color: 'white'}}/>
-                      <Input placeholder='Last Name' autoCapitalize='none' onChangeText={(lastName) => this.setState({lastName})}/>
+                      <Input placeholder='Last Name' autoCapitalize='characters' onChangeText={(lastName) => this.setState({lastName})}/>
                     </InputGroup>
                     <InputGroup>
                       <Icon name='ios-unlock-outline' style={{color: 'white'}}/>
