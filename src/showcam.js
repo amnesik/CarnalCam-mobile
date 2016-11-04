@@ -25,11 +25,13 @@ class Showcam extends Component {
     }
 
     componentDidMount(){
-      io.socket.on('device', (msg) => {
-        this.setState({
-          position: msg.data.position
+      if(!this.state.recording){
+        io.socket.on('device', (msg) => {
+          this.setState({
+            position: msg.data.position
+          })
         })
-      })
+      }
     }
 
     _fetchPosition(position){
