@@ -72,7 +72,9 @@ class GroupsCam extends Component {
             <List dataArray={this.state.groups}
               renderRow={(groupCam) =>
                   <ListItem onPress={() => {
-                    this.props.navigator.push(routes.showCamListRoute(groupCam))
+                    if(groupCam.membersCount !== 0 && groupCam.membersCount !== '...'){
+                      this.props.navigator.push(routes.showCamListRoute(groupCam));
+                    }
                   }}>
                       <Text style={{color: '#bdc3c7'}}>{groupCam.name}</Text>
                       <Badge>{groupCam.membersCount}</Badge>

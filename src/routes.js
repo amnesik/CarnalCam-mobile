@@ -141,7 +141,7 @@ const routes = {
                 return <Text style={{color: 'white'}}>{device.name}</Text>;
             },
             renderScene(navigator) {
-                return <Showcam navigator={navigator} device={device} currentUser={User.getCurrentUser()}/>;
+                return <Showcam navigator={navigator} device={device} currentUser={User.getCurrentUser()} socket={Socket.getSocket(User.getCurrentUser().token)}/>;
             },
             configureScene() {
                 return Navigator.SceneConfigs.PushFromRight
