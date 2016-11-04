@@ -33,9 +33,6 @@ class GroupsCam extends Component {
       }).then( (res) => res.json())
         .then( (resJson) => {
           if(resJson !== null) {
-            console.log('------- RESPONSE -------');
-            console.log('------- CAM GROUPS -------');
-            console.log(resJson);
             if(resJson.length !== 0) {
               // Put they groups into var
               resJson.map(function (key) {

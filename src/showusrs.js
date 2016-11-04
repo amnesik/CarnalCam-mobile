@@ -1,10 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, List, ListItem, Thumbnail, Text, Spinner } from 'native-base';
-import { WebView } from 'react-native';
-
-import routes from './routes';
+import { Container, Content, List, ListItem, Text, Spinner } from 'native-base';
 import myThemeView from './themes/theme-people';
 
 class Showusrs extends Component {
@@ -32,9 +29,6 @@ class Showusrs extends Component {
       }).then( (res) => res.json())
         .then( (resJson) => {
           if(resJson !== null) {
-            console.log('------- RESPONSE -------');
-            console.log('------- USERS -------');
-            console.log(resJson);
             if(resJson.members.length !== 0) {
               // Put they groups into var
               this.setState({

@@ -11,7 +11,6 @@ import routes from './routes';
 var User = require('./Globals/User');
 
 window.SERVER_IP = '178.62.14.241';
-//window.SERVER_IP = 'localhost';
 window.SERVER_PORT = '1337';
 
 class Setup extends Component {
@@ -34,11 +33,9 @@ class Setup extends Component {
       try {
         AsyncStorage.getItem('user')
         .then( (value) => 
-          {           
-            console.log('User Async : ' + value);
+          {
             if(value !== null) {
               const jsonUser = JSON.parse(value);
-              console.log(jsonUser);
               User.setCurrentUser(jsonUser);
               // Control values
               if(jsonUser.user.id !== null && jsonUser.token !== null) {

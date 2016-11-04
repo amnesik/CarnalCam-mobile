@@ -96,15 +96,8 @@ class Showcam extends Component {
     }
 
     _socketConnect() {
-      console.log('#### CONNECT ####')
-      io.socket.get('/device/' + this.props.device.id, (data,JWR) => {
-        console.log('DATA: ', data);
-        console.log('HEADERS: ', JWR.headers);
-        console.log('STATUS CODE: ', JWR.statusCode);
-      });
+      io.socket.get('/device/' + this.props.device.id);
       io.socket.on('device', (msg) => {
-        console.log('### MESSAGE SOCKET #####');
-        console.log(msg)
         this.setState({
           position: msg.data.position
         })
@@ -112,12 +105,7 @@ class Showcam extends Component {
     }
 
     _socketDisconnect() {
-      console.log('#### DISCONNECT ####');
-      io.socket.delete('/device/' + this.props.device.id, (data,JWR) => {
-        console.log('DATA: ', data);
-        console.log('HEADERS: ', JWR.headers);
-        console.log('STATUS CODE: ', JWR.statusCode);
-      });
+      io.socket.delete('/device/' + this.props.device.id);
       this.setState({
         recording: false
       })

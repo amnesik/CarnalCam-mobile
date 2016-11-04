@@ -38,8 +38,6 @@ class Signin extends Component {
         }).then( (res) => res.json())
           .then( (resJson) => {
             if(resJson !== null) {
-              console.log('------- RESPONSE -------');
-              console.log(resJson)
               try {
                 AsyncStorage.setItem('user',  JSON.stringify(resJson), () => {
                   User.setCurrentUser(resJson);

@@ -63,7 +63,6 @@ class Register extends Component {
               })
           }).then( (res) => res.json())
             .then( (resJson) => {
-                console.log('------- RESPONSE -------' + resJson);
                 try {
                   AsyncStorage.setItem('user',  JSON.stringify(resJson), () => {
                     User.setCurrentUser(resJson);

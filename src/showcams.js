@@ -1,11 +1,9 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Container, Title, Content, Footer, FooterTab, Button, Icon, Spinner, List, ListItem, Text, Badge } from 'native-base';
+import { Container, Content, Spinner, List, ListItem, Text } from 'native-base';
 
 import routes from './routes';
-import ExNavigator from '@exponent/react-native-navigator';
-import myTheme from './themes/theme-footer';
 import myThemeView from './themes/theme-people';
 
 class ShowCams extends Component {
@@ -33,9 +31,6 @@ class ShowCams extends Component {
       }).then( (res) => res.json())
         .then( (resJson) => {
           if(resJson !== null) {
-            console.log('------- RESPONSE -------');
-            console.log('------- DEVICES -------');
-            console.log(resJson);
             if(resJson.devices.length !== 0) {
               // Put they groups into var
               this.setState({

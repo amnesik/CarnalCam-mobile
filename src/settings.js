@@ -51,9 +51,6 @@ class Settings extends Component {
           }),
         }).then((res) => res.json())
           .then((resJson) => {
-            console.log('----- RESPONSE -----');
-            console.log('-- PROFILE --');
-            console.log(resJson);
             // Change all fields
             this.setState({
               btnProfile: 'Profile updated',
@@ -90,9 +87,6 @@ class Settings extends Component {
           }),
         }).then((res) => res.json())
           .then((resJson) => {
-            console.log('----- RESPONSE -----');
-            console.log('-- PASSWORD --');
-            console.log(resJson);
             // Change all fields
             this.setState({
               btnPass: 'Password updated',

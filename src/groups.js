@@ -32,8 +32,6 @@ class Groups extends Component {
     }).then((res) => res.json())
       .then((resJson) => {
         if (resJson !== null) {
-          console.log('------- RESPONSE -------');
-          console.log('------- GROUPS NEXT -------');
           if (resJson.groups.length !== 0) {
             // Put they groups into var
             this.setState({
@@ -54,10 +52,6 @@ class Groups extends Component {
               }).then((res) => res.json())
                 .then((resJson1) => {
                   if (resJson !== null) {
-                    console.log('----- RESPONSE ------');
-                    console.log('----- USER GROUP ------');
-                    console.log(resJson1);
-                    console.log(resJson1.members.length);
                     key.membersCount = resJson1.members.length;
                     //
                     this.setState({
