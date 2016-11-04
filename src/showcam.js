@@ -24,6 +24,14 @@ class Showcam extends Component {
         }
     }
 
+    componentDidMount(){
+      io.socket.on('device', (msg) => {
+        this.setState({
+          position: msg.data.position
+        })
+      })
+    }
+
     _fetchPosition(position){
       fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/Device/' + this.props.device.id, {
         method: 'PUT',
@@ -37,6 +45,7 @@ class Showcam extends Component {
         })
       })
     }
+
 
     _changeDirection(rate) {
       if((rate === 10 && this.state.position !== 180) || (rate === -10 && this.state.position !== 0)) {
@@ -96,10 +105,9 @@ class Showcam extends Component {
     }
 
     _socketConnect() {
-      io.socket.get('/device/' + this.props.device.id);
-      io.socket.on('device', (msg) => {
+      io.socket.get('/device/' + this.props.device.id, (resData) => {
         this.setState({
-          position: msg.data.position
+          position: resData.position
         })
       })
     }

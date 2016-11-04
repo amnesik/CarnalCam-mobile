@@ -36,12 +36,24 @@ class GroupsCam extends Component {
             if(resJson.length !== 0) {
               // Put they groups into var
               resJson.map(function (key) {
-                if(typeof key.devices !== 'undefined') {
-                  key.membersCount = key.devices.length
-                } else {
-                  key.membersCount = 0
-                }
-              });
+                // Fetch userGroup
+                fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/DeviceGroup/' + key.id, {
+                  method: 'GET',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'JWT ' + this.props.currentUser.token
+                  }
+                }).then((res) => res.json())
+                  .then((resJson1) => {
+                    if (resJson !== null) {
+                      key.membersCount = resJson1.devices.length
+                      this.setState({
+                        groups: resJson
+                      })
+                    }
+                  });
+              }, this);
               this.setState({
                 groups: resJson,
                 loadingGrps: false,
