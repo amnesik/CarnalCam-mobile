@@ -24,16 +24,6 @@ class Showcam extends Component {
         }
     }
 
-    componentDidMount(){
-      if(!this.state.recording){
-        io.socket.on('device', (msg) => {
-          this.setState({
-            position: msg.data.position
-          })
-        })
-      }
-    }
-
     _fetchPosition(position){
       fetch('http://' + window.SERVER_IP + ':' + window.SERVER_PORT + '/Device/' + this.props.device.id, {
         method: 'PUT',
@@ -48,26 +38,22 @@ class Showcam extends Component {
       })
     }
 
-
     _changeDirection(rate) {
-      if((rate === 10 && this.state.position !== 180) || (rate === -10 && this.state.position !== 0)) {
-        if(this.state.position === 170){
-          this._fetchPosition(parseInt(this.state.position) + parseInt(rate));
-          this.setState({
-            rightIsActive: false
-          })
-        } else if(this.state.position === 10){
-          this._fetchPosition(parseInt(this.state.position) + parseInt(rate));
-          this.setState({
-            leftIsActive: false
-          })
-        } else {
-          this._fetchPosition(parseInt(this.state.position) + parseInt(rate));
-          this.setState({
-            leftIsActive: true,
-            rightIsActive: true
-          })
-        }
+      var position = parseInt(this.state.position) + parseInt(rate)
+      this._fetchPosition(position)
+      if(position === 180){
+        this.setState({
+          rightIsActive: false
+        })
+      } else if(position === 0){
+        this.setState({
+          leftIsActive: false
+        })
+      } else {
+        this.setState({
+          leftIsActive: true,
+          rightIsActive: true
+        })
       }
     }
 
@@ -107,15 +93,29 @@ class Showcam extends Component {
     }
 
     _socketConnect() {
-      io.socket.get('/device/' + this.props.device.id, (resData) => {
-        this.setState({
-          position: resData.position
-        })
+      io.socket.get('/device/' + this.props.device.id, (resData, jwres) => {
+        if(typeof resData !== 'undefined') {
+          this.setState({
+            position: resData.position
+          })
+        } else {
+          this._socketConnect();
+        }
       })
+      if(!this.state.recording){
+        io.socket.on('device', (msg) => {
+          this.setState({
+            position: msg.data.position
+          })
+        })
+      }
     }
 
     _socketDisconnect() {
       io.socket.delete('/device/' + this.props.device.id);
+      if(this.state.recording){
+        io.socket.off('device')
+      }
       this.setState({
         recording: false
       })
